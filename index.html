@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solid State Amplifier Classes Compared: A, AB, D</title>
+<style>
+  :root {
+    --bg: #0f1419;
+    --surface: #1a2332;
+    --surface-2: #243042;
+    --text: #e8eef5;
+    --text-muted: #8ba0b8;
+    --accent-a: #ff6b6b;
+    --accent-ab: #ffd93d;
+    --accent-d: #6bcf7f;
+    --border: #2d3f55;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    padding: 2rem 1rem;
+  }
+  .container { max-width: 1100px; margin: 0 auto; }
+  header { text-align: center; margin-bottom: 3rem; }
+  h1 { font-size: 2.5rem; margin-bottom: 0.5rem; letter-spacing: -0.02em; }
+  .subtitle { color: var(--text-muted); font-size: 1.1rem; }
+
+  .intro {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+  .intro h2 { font-size: 1.2rem; margin-bottom: 0.5rem; color: var(--text-muted); }
+  .intro p { font-size: 1rem; }
+
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.75rem;
+    border-top: 4px solid;
+  }
+  .card.class-a { border-top-color: var(--accent-a); }
+  .card.class-ab { border-top-color: var(--accent-ab); }
+  .card.class-d { border-top-color: var(--accent-d); }
+
+  .card h3 { font-size: 1.5rem; margin-bottom: 0.25rem; }
+  .card .tagline { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.25rem; font-style: italic; }
+  .card h4 { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin: 1.25rem 0 0.5rem; }
+  .card ul { list-style: none; padding: 0; }
+  .card li { padding: 0.35rem 0; font-size: 0.95rem; padding-left: 1.25rem; position: relative; }
+  .card li::before { content: "—"; position: absolute; left: 0; color: var(--text-muted); }
+
+  .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 1rem; padding: 1rem; background: var(--surface-2); border-radius: 8px; }
+  .stat-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+  .stat-value { font-size: 1.1rem; font-weight: 600; margin-top: 0.2rem; }
+
+  .comparison { margin-bottom: 3rem; }
+  .comparison h2 { font-size: 1.75rem; margin-bottom: 1rem; }
+  table { width: 100%; border-collapse: collapse; background: var(--surface); border-radius: 12px; overflow: hidden; }
+  th, td { padding: 1rem; text-align: left; border-bottom: 1px solid var(--border); }
+  th { background: var(--surface-2); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); }
+  tr:last-child td { border-bottom: none; }
+  td:first-child { font-weight: 600; color: var(--text-muted); }
+
+  .verdict {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+  }
+  .verdict h2 { margin-bottom: 1rem; }
+  .verdict-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin-top: 1rem; }
+  .verdict-item { padding: 1rem; background: var(--surface-2); border-radius: 8px; border-left: 3px solid; }
+  .verdict-item.a { border-left-color: var(--accent-a); }
+  .verdict-item.ab { border-left-color: var(--accent-ab); }
+  .verdict-item.d { border-left-color: var(--accent-d); }
+  .verdict-item strong { display: block; margin-bottom: 0.35rem; }
+
+  footer { text-align: center; color: var(--text-muted); font-size: 0.85rem; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border); }
+
+  @media (max-width: 600px) {
+    h1 { font-size: 1.8rem; }
+    body { padding: 1rem 0.75rem; }
+    .card { padding: 1.25rem; }
+    th, td { padding: 0.65rem; font-size: 0.85rem; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <h1>Solid State Amplifier Classes</h1>
+    <p class="subtitle">Class A vs. Class AB vs. Class D — how they work and where they fit</p>
+  </header>
+
+  <section class="intro">
+    <h2>What the classes mean</h2>
+    <p>An amplifier's "class" describes how its output transistors behave over each cycle of the audio signal — specifically, how much of the waveform each device is actively amplifying. That single choice cascades into efficiency, heat, weight, cost, and (arguably) sound character.</p>
+  </section>
+
+  <section class="cards">
+
+    <div class="card class-a">
+      <h3>Class A</h3>
+      <p class="tagline">The purist's choice</p>
+
+      <h4>How it works</h4>
+      <p>Output devices conduct through the entire 360° of the signal cycle. Transistors are always on, always drawing current — even at idle.</p>
+
+      <h4>Pros</h4>
+      <ul>
+        <li>Lowest distortion of the three</li>
+        <li>No crossover distortion (only one device handles the signal at a time in single-ended designs)</li>
+        <li>Smooth, linear transfer characteristic</li>
+        <li>Favored by many audiophiles for its sonic character</li>
+      </ul>
+
+      <h4>Cons</h4>
+      <ul>
+        <li>Very inefficient — most input power becomes heat</li>
+        <li>Runs hot; needs massive heatsinks</li>
+        <li>Heavy, large, expensive</li>
+        <li>Impractical for high power output</li>
+      </ul>
+
+      <div class="stats">
+        <div><div class="stat-label">Typical efficiency</div><div class="stat-value">15–30%</div></div>
+        <div><div class="stat-label">Heat output</div><div class="stat-value">Very high</div></div>
+      </div>
+    </div>
+
+    <div class="card class-ab">
+      <h3>Class AB</h3>
+      <p class="tagline">The practical sweet spot</p>
+
+      <h4>How it works</h4>
+      <p>Two output devices each handle slightly more than half the cycle, with a small bias current keeping them both active through the crossover region. Class A behavior at low levels, Class B at high levels.</p>
+
+      <h4>Pros</h4>
+      <ul>
+        <li>Much more efficient than pure Class A</li>
+        <li>Proper biasing largely eliminates crossover distortion</li>
+        <li>Well understood; mature, proven designs</li>
+        <li>Dominant topology in mainstream hi-fi for decades</li>
+      </ul>
+
+      <h4>Cons</h4>
+      <ul>
+        <li>Still generates significant heat at higher power</li>
+        <li>Heavier and larger than Class D</li>
+        <li>Requires careful bias management to sound its best</li>
+      </ul>
+
+      <div class="stats">
+        <div><div class="stat-label">Typical efficiency</div><div class="stat-value">50–70%</div></div>
+        <div><div class="stat-label">Heat output</div><div class="stat-value">Moderate</div></div>
+      </div>
+    </div>
+
+    <div class="card class-d">
+      <h3>Class D</h3>
+      <p class="tagline">The modern powerhouse</p>
+
+      <h4>How it works</h4>
+      <p>Switch-mode operation. Output transistors are either fully on or fully off at very high frequencies (hundreds of kHz to MHz), using pulse-width modulation. A low-pass filter at the output reconstructs the analog signal.</p>
+
+      <h4>Pros</h4>
+      <ul>
+        <li>Extremely efficient — very little wasted as heat</li>
+        <li>Small, light, cool — great for compact or portable gear</li>
+        <li>Scales to high power cheaply</li>
+        <li>Modern designs (Hypex, Purifi, ICEpower) measure superbly</li>
+      </ul>
+
+      <h4>Cons</h4>
+      <ul>
+        <li>Output filter design is critical and load-sensitive</li>
+        <li>Older/cheap implementations can sound harsh in the treble</li>
+        <li>Switching noise requires careful layout and shielding</li>
+      </ul>
+
+      <div class="stats">
+        <div><div class="stat-label">Typical efficiency</div><div class="stat-value">85–95%</div></div>
+        <div><div class="stat-label">Heat output</div><div class="stat-value">Low</div></div>
+      </div>
+    </div>
+
+  </section>
+
+  <section class="comparison">
+    <h2>Side-by-side</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Attribute</th>
+          <th>Class A</th>
+          <th>Class AB</th>
+          <th>Class D</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Conduction angle</td><td>360°</td><td>180–360°</td><td>Switching (on/off)</td></tr>
+        <tr><td>Efficiency</td><td>15–30%</td><td>50–70%</td><td>85–95%</td></tr>
+        <tr><td>Heat generated</td><td>Very high</td><td>Moderate</td><td>Low</td></tr>
+        <tr><td>Size / weight</td><td>Large, heavy</td><td>Medium</td><td>Small, light</td></tr>
+        <tr><td>Distortion (modern designs)</td><td>Very low</td><td>Low</td><td>Low to very low</td></tr>
+        <tr><td>Cost per watt</td><td>High</td><td>Moderate</td><td>Low</td></tr>
+        <tr><td>Typical power range</td><td>5–50 W</td><td>20–500 W</td><td>20–2000+ W</td></tr>
+        <tr><td>Common uses</td><td>Audiophile hi-fi, studio reference</td><td>Hi-fi, pro audio, guitar amps</td><td>Car audio, powered speakers, subs, PA, modern hi-fi</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="verdict">
+    <h2>Which one for which job?</h2>
+    <p>None of these is universally "best" — the right pick depends on the room, the speakers, the budget, and what you value.</p>
+
+    <div class="verdict-grid">
+      <div class="verdict-item a">
+        <strong>Choose Class A if</strong>
+        you're chasing the lowest possible distortion on a moderately sensitive speaker, don't mind the heat and weight, and the cost isn't a concern.
+      </div>
+      <div class="verdict-item ab">
+        <strong>Choose Class AB if</strong>
+        you want proven, well-rounded hi-fi performance with flexibility for a range of speakers and don't want to think about trade-offs.
+      </div>
+      <div class="verdict-item d">
+        <strong>Choose Class D if</strong>
+        you need high power in a small package, care about efficiency, or want the best measured performance per dollar — the modern implementations have closed the audible gap.
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>Solid state amplifier classes overview. Figures are typical ranges — individual designs vary.</p>
+  </footer>
+
+</div>
+</body>
+</html>
