@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Three Different Ones — Tube Amp Topologies</title>
+<style>
+  :root {
+    --soot: #14141a;
+    --concrete: #2a2a30;
+    --concrete-2: #3a3a42;
+    --smoke: #5a5a62;
+    --bone: #d8d4c8;
+    --paper: #ebe6d8;
+    --pig: #ff9ec4;
+    --pig-deep: #e76a9b;
+    --rust: #8a4a3a;
+    --ember: #c46a3a;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--soot);
+    color: var(--paper);
+    font-family: "Georgia", "Times New Roman", serif;
+    line-height: 1.55;
+  }
+
+  body {
+    background:
+      radial-gradient(ellipse at top, #2c2530 0%, #15141a 55%, #0a0a0e 100%),
+      linear-gradient(180deg, #2a2530 0%, #0a0a0e 100%);
+    min-height: 100vh;
+  }
+
+  /* Smoky overlay */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 20% 30%, rgba(255,158,196,0.04), transparent 40%),
+      radial-gradient(circle at 80% 60%, rgba(196,106,58,0.04), transparent 40%),
+      repeating-linear-gradient(0deg, rgba(0,0,0,0.04) 0 1px, transparent 1px 3px);
+    z-index: 0;
+  }
+
+  .wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 48px 28px 80px;
+  }
+
+  /* ---------- HEADER / HERO ---------- */
+  header {
+    position: relative;
+    padding: 24px 0 8px;
+    border-bottom: 1px solid var(--concrete-2);
+    margin-bottom: 40px;
+  }
+
+  .eyebrow {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--pig);
+    margin-bottom: 14px;
+  }
+
+  h1 {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-weight: 900;
+    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    letter-spacing: -0.01em;
+    line-height: 1.02;
+    margin: 0 0 12px;
+    color: var(--bone);
+    text-transform: uppercase;
+  }
+
+  .subtitle {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 1rem;
+    color: var(--smoke);
+    font-style: italic;
+    margin-bottom: 28px;
+  }
+
+  /* Amp scene */
+  .scene {
+    position: relative;
+    display: block;
+    width: 100%;
+    max-width: 760px;
+    margin: 16px auto 28px;
+    aspect-ratio: 4 / 3;
+  }
+  .scene .amp {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 6px;
+    filter: drop-shadow(0 18px 60px rgba(0,0,0,0.65)) drop-shadow(0 0 40px rgba(255,158,196,0.08));
+    position: relative;
+    z-index: 2;
+  }
+  .scene .amp-glow {
+    position: absolute;
+    inset: -8% -4% -6% -4%;
+    background:
+      radial-gradient(ellipse at 50% 55%, rgba(255,158,196,0.22) 0%, rgba(255,158,196,0.06) 35%, transparent 65%),
+      radial-gradient(ellipse at 50% 80%, rgba(196,106,58,0.18) 0%, transparent 55%);
+    z-index: 1;
+    pointer-events: none;
+    filter: blur(6px);
+  }
+  .scene .overlay-pig {
+    position: absolute;
+    top: -14%;
+    left: 8%;
+    width: 18%;
+    transform: translateX(0);
+    z-index: 3;
+    animation: drift 8s ease-in-out infinite;
+    transform-origin: center;
+    filter: drop-shadow(0 8px 18px rgba(0,0,0,0.5));
+  }
+  .scene .caption {
+    position: absolute;
+    bottom: 8px;
+    right: 12px;
+    z-index: 4;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--pig);
+    background: rgba(10,8,12,0.55);
+    padding: 4px 8px;
+    border: 1px solid rgba(255,158,196,0.25);
+    border-radius: 2px;
+  }
+
+  /* ---------- SECTION HEADERS ---------- */
+  h2 {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.95rem;
+    color: var(--pig);
+    margin: 40px 0 14px;
+    padding-bottom: 6px;
+    border-bottom: 1px dashed var(--concrete-2);
+  }
+
+  p.lede {
+    color: var(--bone);
+    font-size: 1.05rem;
+    max-width: 72ch;
+  }
+
+  /* ---------- TABLE ---------- */
+  .table-scroll {
+    overflow-x: auto;
+    border: 1px solid var(--concrete-2);
+    background: linear-gradient(180deg, #1b1b21 0%, #15151a 100%);
+    box-shadow: inset 0 0 80px rgba(0,0,0,0.4);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 0.86rem;
+    min-width: 900px;
+  }
+
+  thead th {
+    position: sticky;
+    top: 0;
+    background: linear-gradient(180deg, #2a2029 0%, #1f1821 100%);
+    color: var(--pig);
+    text-transform: uppercase;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    font-weight: 700;
+    padding: 14px 12px;
+    text-align: left;
+    border-bottom: 2px solid var(--pig-deep);
+    white-space: nowrap;
+  }
+
+  thead th:first-child {
+    color: var(--bone);
+    background: linear-gradient(180deg, #1f1f25 0%, #15151a 100%);
+    border-bottom-color: var(--concrete-2);
+  }
+
+  tbody td {
+    padding: 12px 12px;
+    border-bottom: 1px solid #222228;
+    vertical-align: top;
+    color: var(--paper);
+  }
+
+  tbody tr:nth-child(even) td {
+    background: rgba(255,255,255,0.015);
+  }
+
+  tbody tr:hover td {
+    background: rgba(255,158,196,0.05);
+  }
+
+  tbody th {
+    text-align: left;
+    padding: 12px 12px;
+    font-weight: 700;
+    color: var(--bone);
+    border-bottom: 1px solid #222228;
+    background: rgba(0,0,0,0.25);
+    white-space: nowrap;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* highlight the pig in the table — SET columns */
+  thead th.set {
+    color: var(--pig);
+  }
+
+  thead th.pp {
+    color: var(--ember);
+    border-bottom-color: var(--ember);
+  }
+
+  thead th.ss {
+    color: #8fa8b5;
+    border-bottom-color: #8fa8b5;
+  }
+
+  /* ---------- TAKEAWAY CARD ---------- */
+  .takeaway {
+    margin-top: 44px;
+    padding: 26px 28px;
+    background: linear-gradient(180deg, #1d1820 0%, #141016 100%);
+    border-left: 4px solid var(--pig);
+    position: relative;
+  }
+
+  .takeaway::before {
+    content: "♫";
+    position: absolute;
+    top: 12px;
+    right: 18px;
+    color: var(--pig);
+    opacity: 0.25;
+    font-size: 2.4rem;
+  }
+
+  .takeaway h3 {
+    margin: 0 0 10px;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 0.8rem;
+    color: var(--pig);
+  }
+
+  .takeaway p {
+    margin: 0 0 10px;
+    color: var(--paper);
+  }
+
+  .confidence {
+    margin-top: 18px;
+    font-size: 0.82rem;
+    color: var(--smoke);
+    font-style: italic;
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer {
+    margin-top: 60px;
+    padding-top: 20px;
+    border-top: 1px solid var(--concrete-2);
+    color: var(--smoke);
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-align: center;
+  }
+
+  footer .pink {
+    color: var(--pig);
+  }
+  footer .mark {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0 14px -3px;
+    opacity: 0.85;
+  }
+  footer .mark svg { display: block; }
+  footer .row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    flex-wrap: wrap;
+  }
+
+  /* pig float animation */
+  @keyframes drift {
+    0%   { transform: translate(0, 0) rotate(-2deg); }
+    50%  { transform: translate(8px, -6px) rotate(1deg); }
+    100% { transform: translate(0, 0) rotate(-2deg); }
+  }
+  .pig {
+    animation: drift 8s ease-in-out infinite;
+    transform-origin: center;
+  }
+  .pig.p2 { animation-duration: 10s; animation-delay: -3s; }
+  .pig.p3 { animation-duration: 7s;  animation-delay: -1s; }
+  .pig.p4 { animation-duration: 11s; animation-delay: -5s; }
+  .pig.p5 { animation-duration: 9s;  animation-delay: -2s; }
+
+  /* (sky pigs removed — they were clipping at the edge and looking awful) */
+
+  /* inline pig icons in the table */
+  .pig-icon {
+    display: inline-block;
+    width: 14px;
+    height: 11px;
+    vertical-align: -1px;
+    margin-right: 6px;
+  }
+  .pig-bullet {
+    display: inline-block;
+    width: 16px;
+    height: 13px;
+    vertical-align: -2px;
+    margin-right: 8px;
+  }
+
+  /* pig parade at the bottom */
+  .parade {
+    margin-top: 40px;
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    align-items: flex-end;
+    opacity: 0.7;
+    flex-wrap: wrap;
+  }
+  .parade svg {
+    width: 42px;
+    height: 34px;
+  }
+  .parade svg:nth-child(odd)  { transform: translateY(-3px); }
+  .parade svg:nth-child(3n)   { transform: translateY(2px) rotate(-4deg); }
+  .parade svg:nth-child(4n+1) { transform: translateY(-5px) rotate(3deg); }
+
+  /* smoke drift */
+  @keyframes smokeDrift {
+    0%   { opacity: 0.55; transform: translateY(0) translateX(0); }
+    50%  { opacity: 0.35; transform: translateY(-6px) translateX(4px); }
+    100% { opacity: 0.55; transform: translateY(0) translateX(0); }
+  }
+  .smoke { animation: smokeDrift 6s ease-in-out infinite; }
+  .smoke.s2 { animation-delay: -2s; }
+  .smoke.s3 { animation-delay: -4s; }
+  .smoke.s4 { animation-delay: -1s; }
+
+  @media (max-width: 640px) {
+    .wrap { padding: 28px 16px 60px; }
+    h1 { font-size: 2rem; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">Pigs (Three Different Ones)</div>
+    <h1>Tube Amp Topologies</h1>
+    <div class="subtitle">Single-ended, push-pull triode, push-pull ultralinear — hot glass, heavy iron, three ways to move a cone.</div>
+
+    <!-- 45 amp hero -->
+    <div class="scene">
+      <div class="amp-glow"></div>
+      <img class="amp" src="images/korneff-45.jpg" alt="Two 45 SET amplifiers and a friend" />
+      <div class="caption">Two 45 Amps &middot; One Friend</div>
+    </div>
+  </header>
+
+  <p class="lede">
+    Four topologies, six implementations — five tube flavors and solid-state as the reference. The tube approaches share
+    a signal-path philosophy (hot glass, high voltage, iron-coupled output) but deliver utterly different personalities
+    at the speaker terminals; solid-state sits alongside them as the measurement-dominant counterpoint. The cells below
+    compare the mechanics; the takeaway at the bottom compares the feel.
+  </p>
+
+  <h2>Side by side</h2>
+
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th>Aspect</th>
+          <th class="set">Type 45 SET</th>
+          <th class="set">2A3 SET</th>
+          <th class="set">300B SET</th>
+          <th class="pp">PP Triode</th>
+          <th class="pp">PP Ultralinear</th>
+          <th class="ss">Solid State</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>Topology</th>
+          <td>One DHT, Class A</td>
+          <td>One DHT, Class A</td>
+          <td>One DHT, Class A</td>
+          <td>Two tubes, 180° phase, Class A/AB</td>
+          <td>Two tubes, screen tap ~40%, Class AB</td>
+          <td>Bipolar or MOSFET output stage; Class A, AB, or D</td>
+        </tr>
+        <tr>
+          <th>Typical power</th>
+          <td>1.5–2 W</td>
+          <td>3–4 W (single plate); ~15 W PP</td>
+          <td>7–9 W</td>
+          <td>15–30 W</td>
+          <td>30–100 W</td>
+          <td>50–500+ W</td>
+        </tr>
+        <tr>
+          <th>Plate voltage</th>
+          <td>~250 V</td>
+          <td>~250 V</td>
+          <td>~350–450 V</td>
+          <td>varies</td>
+          <td>varies</td>
+          <td>±35–100 V rails</td>
+        </tr>
+        <tr>
+          <th>Plate resistance (Rp)</th>
+          <td>~1,700 Ω</td>
+          <td>~800 Ω</td>
+          <td>~700 Ω</td>
+          <td>—</td>
+          <td>—</td>
+          <td>Output Z typically &lt;0.1 Ω</td>
+        </tr>
+        <tr>
+          <th>Filament</th>
+          <td>2.5 V DHT</td>
+          <td>2.5 V DHT</td>
+          <td>5 V DHT</td>
+          <td>mix</td>
+          <td>mix</td>
+          <td>N/A</td>
+        </tr>
+        <tr>
+          <th>Distortion character</th>
+          <td>Lowest 2nd-harmonic at low level; very linear, clips gracefully</td>
+          <td>2nd-harmonic dominant, slightly more than 45</td>
+          <td>2nd-harmonic; richer, warmer texture</td>
+          <td>Evens cancel; 3rd-harmonic dominant, lower THD</td>
+          <td>Between triode and pentode</td>
+          <td>Very low THD (&lt;0.01%), but odd-order-dominant; Class AB can have crossover distortion at low level</td>
+        </tr>
+        <tr>
+          <th>Damping factor</th>
+          <td>Very low (~2)</td>
+          <td>Low (~3)</td>
+          <td>Low (~3–4)</td>
+          <td>Moderate (4–8)</td>
+          <td>Higher (8–15)</td>
+          <td>Very high (100–1000+)</td>
+        </tr>
+        <tr>
+          <th>Bass authority</th>
+          <td>Weakest; "delicate"</td>
+          <td>Better than 45; still gentle</td>
+          <td>Warmer, fuller bloom</td>
+          <td>Tighter</td>
+          <td>Tightest of the three tube types</td>
+          <td>Iron-fisted; controls any driver</td>
+        </tr>
+        <tr>
+          <th>Sonic reputation</th>
+          <td>Purest, most transparent mids; jewel-like, tiny presentation</td>
+          <td>Most neutral of the classic DHTs; punchier than 45</td>
+          <td>Romantic, lush, holographic mids</td>
+          <td>Liquid mids with better grip</td>
+          <td>Most "hi-fi," neutral, controlled</td>
+          <td>Measurably accurate; often described as "clinical," "grainy," or "lacking tube magic" — camp-dependent</td>
+        </tr>
+        <tr>
+          <th>Sensitivity — near-field (~3 ft)</th>
+          <td>92+ dB</td>
+          <td>88+ dB</td>
+          <td>85+ dB</td>
+          <td>82+ dB</td>
+          <td>80+ dB</td>
+          <td>Any (power is cheap)</td>
+        </tr>
+        <tr>
+          <th>Sensitivity — mid-room (~10 ft)</th>
+          <td>100+ dB</td>
+          <td>95+ dB</td>
+          <td>93+ dB</td>
+          <td>88–92 dB</td>
+          <td>85–90 dB</td>
+          <td>Any (78+ dB)</td>
+        </tr>
+        <tr>
+          <th>Speaker type (the real constraint)</th>
+          <td>Crossover-less single-driver only (Lowther, PHY-HP, Voxativ)</td>
+          <td>Single-driver or very-high-sensitivity horn with benign network</td>
+          <td>Single-driver, or vintage horn (Altec, Klipsch Heritage) as a compromise</td>
+          <td>2-way OK if impedance is reasonably flat</td>
+          <td>Most box speakers with standard crossovers</td>
+          <td>Anything — ribbons, stats, 2Ω minimum, reactive multi-way</td>
+        </tr>
+        <tr>
+          <th>Why (load character)</th>
+          <td>DF≈2: any crossover dip or phase swing bends FR — even 1.5-way designs dip 3-4Ω at the handoff</td>
+          <td>Same — slightly more headroom to mask it</td>
+          <td>Same — reactive loads still warp the top end</td>
+          <td>DF 4-8 tolerates mild Z swings</td>
+          <td>DF 8-15 drives reactive, Z-swinging loads with minimal FR effect</td>
+          <td>DF 100+: output voltage is functionally independent of load; FR stays ruler-flat into any Z curve</td>
+        </tr>
+        <tr>
+          <th>Tube / device cost</th>
+          <td>Scarce; NOS $200–600/pr; few current-production</td>
+          <td>Moderate; good current-production (EH, JJ, Sophia)</td>
+          <td>Plentiful current-production; NOS WE very expensive</td>
+          <td>Depends on tube</td>
+          <td>Depends on tube</td>
+          <td>Output transistors are commodity-cheap; cost is in the PSU, heatsinks, and chassis</td>
+        </tr>
+        <tr>
+          <th>OPT requirements</th>
+          <td>Gapped, must handle DC; small but high-quality critical</td>
+          <td>Gapped, DC bias; slightly larger than 45</td>
+          <td>Gapped, DC bias; larger core</td>
+          <td>No DC; easier core</td>
+          <td>No DC; needs UL taps</td>
+          <td>None — direct-coupled or DC-servo output</td>
+        </tr>
+        <tr>
+          <th>Classic examples</th>
+          <td><strong style="color:var(--pig)">Korneff 45</strong> (the unicorn); WE 91A-style; Shindo; Yamamoto A-08</td>
+          <td>Cary CAD-805 (triode mode), AN Kageki, Sun Audio</td>
+          <td>Cary 300B, AN Ongaku, many boutique</td>
+          <td>McIntosh MC30 (triode-strapped), Air Tight ATM-300</td>
+          <td>Dynaco ST-70, Marantz 8B, most modern EL34/KT88</td>
+          <td>Pass Labs Aleph / First Watt (Class A MOSFET); Krell KSA; Bryston; Hypex NCore (Class D)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="takeaway">
+    <h3>Running with the dogs — quick mental model</h3>
+    <p>
+      <strong style="color:var(--pig)">Type 45</strong> is the most refined and most limiting DHT — you need the right
+      speaker or it falls apart. <strong style="color:var(--pig)">2A3</strong> is the "sensible DHT":
+      meaningfully more headroom with most of the 45's purity. <strong style="color:var(--pig)">300B</strong> trades some
+      transparency for warmth and usable power.
+    </p>
+    <p>
+      <strong style="color:var(--ember)">PP Triode</strong> keeps much of the single-ended tonal character while doubling
+      the power and cancelling even-order distortion. <strong style="color:var(--ember)">Ultralinear</strong> is Hafler's
+      compromise — screen taps give you ~80% of triode linearity with ~80% of pentode power, and the most flexible
+      speaker match.
+    </p>
+    <p>
+      <strong style="color:#8fa8b5">Solid state</strong> is the reference point for measurement: damping factor in the
+      hundreds, output voltage independent of load, FR flat into anything. Whether that's what you want is the question —
+      many listeners trade the ruler-flat precision for the harmonic texture of a DHT. The two aren't really on the same
+      axis; they're answering different questions about what an amplifier is supposed to do.
+    </p>
+    <p style="border-left: 3px solid var(--ember); padding-left: 14px; margin-top: 18px;">
+      <strong style="color:var(--ember)">One nuance on SPL.</strong> The "you need 100 dB speakers for a SET" rule of
+      thumb assumes a mid-room listening triangle (~10 ft). Inverse square law gives +6 dB per halving of distance, so
+      near-field listening (3-4 ft) relaxes the requirement by ~9-10 dB. A 95 dB speaker at 3 ft produces essentially the
+      same SPL at your ears as a 100 dB speaker at 7 ft. This is why 45 SET systems in a desktop or recliner-plus-couch
+      configuration can work with "only" 92-95 dB speakers, provided the impedance/phase constraint below is still met.
+    </p>
+    <p style="border-left: 3px solid var(--pig); padding-left: 14px; margin-top: 18px;">
+      <strong style="color:var(--pig)">One nuance on matching.</strong> Sensitivity tells you how loud a speaker gets per
+      watt; it does <em>not</em> tell you how well a SET will drive it. With a damping factor of 2–4, the amp's output
+      voltage follows the speaker's impedance curve — any dip, peak, or phase swing becomes a bump in frequency response.
+      In practice this rules out almost every speaker with a crossover. Even 1.5-way designs — a widebander plus a helper
+      woofer crossed at 80-150 Hz with a single cap and coil — dip to 3-4Ω with ±45° phase at the handoff, and a SET
+      will hear it. The honest answer is that SETs want crossover-less single-driver speakers (Lowther, PHY-HP, Voxativ,
+      Fostex widebanders), and the Klipsch/Altec horn crowd accepts a known compromise in exchange for dynamics and
+      headroom. PP triode widens the window; ultralinear opens it all the way.
+    </p>
+
+    <p style="margin-top: 22px; padding: 14px 16px; background: rgba(255,255,255,0.02); border: 1px dashed var(--concrete-2); font-size: 0.88rem; color: var(--bone);">
+      <strong style="color:var(--pig); text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.72rem; font-family: 'Helvetica Neue', Arial, sans-serif;">Footnote &middot; Filament heating.</strong><br/>
+      Another advantage of low-power DHTs: their filaments tolerate AC heating well, and the best builds lean into it —
+      the Korneff 45 above is a canonical example. AC heating skips the rectifier and filter caps of a DC filament
+      supply, which advocates argue robs the signal of immediacy. Residual hum is nulled with a balance potentiometer
+      ("humdinger") or a center-tapped filament winding. This benefit doesn't transfer to PP designs built around
+      indirectly-heated tubes (EL34, KT88, 6L6) — their heater is isolated from the cathode, so DC heating is a
+      non-issue and the sonic argument doesn't apply.
+    </p>
+
+    <p class="confidence">
+      Confidence: high on power, Rp, and topology facts (well-documented tube specs). Sonic descriptions are
+      consensus-level audiophile characterizations, not measurements.
+    </p>
+  </div>
+
+  <footer>
+    <div class="row">
+      <span>Three different ones</span>
+      <span class="mark" aria-hidden="true">
+        <svg width="84" height="30" viewBox="0 0 84 30" xmlns="http://www.w3.org/2000/svg">
+          <!-- Battersea silhouette: four chimneys over a low building + a tiny pig aloft -->
+          <g fill="#ff9ec4">
+            <!-- building -->
+            <rect x="10" y="20" width="64" height="8"/>
+            <!-- chimneys -->
+            <rect x="16" y="8"  width="4" height="14"/>
+            <rect x="32" y="4"  width="4" height="18"/>
+            <rect x="48" y="4"  width="4" height="18"/>
+            <rect x="64" y="8"  width="4" height="14"/>
+          </g>
+          <!-- tiny pig dot aloft, slightly darker pink -->
+          <ellipse cx="42" cy="2.5" rx="3.2" ry="1.6" fill="#e76a9b"/>
+        </svg>
+      </span>
+      <span>SET &middot; PP Triode &middot; Ultralinear</span>
+    </div>
+  </footer>
+</div>
+</body>
+</html>
