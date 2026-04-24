@@ -336,6 +336,43 @@
   }
   footer .mark { color: var(--gold); letter-spacing: 0.25em; text-transform: uppercase; }
 
+  /* ---------- LANGUAGE TOGGLE ---------- */
+  .lang-toggle {
+    position: absolute;
+    top: 22px;
+    right: 22px;
+    display: inline-flex;
+    border: 1px solid var(--gold);
+    border-radius: 2px;
+    overflow: hidden;
+    font-family: "Trajan Pro", "Cinzel", serif;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+  }
+  .lang-toggle button {
+    background: transparent;
+    color: var(--gold);
+    border: none;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: inherit;
+    letter-spacing: inherit;
+    transition: background 0.2s, color 0.2s;
+  }
+  .lang-toggle button.active {
+    background: var(--gold);
+    color: var(--wall-deep);
+  }
+  .lang-toggle button:not(.active):hover { background: rgba(201,162,74,0.15); }
+
+  header { position: relative; }
+
+  @media (max-width: 620px) {
+    .lang-toggle { top: 10px; right: 10px; font-size: 10px; }
+    .lang-toggle button { padding: 5px 9px; }
+  }
+
   @media (max-width: 620px) {
     .stage { padding: 24px 12px 16px; }
     .frame { padding: 10px; }
@@ -347,6 +384,11 @@
 <body>
 
 <header>
+  <div class="lang-toggle" role="group" aria-label="Language">
+    <button type="button" data-lang="es" class="active" onclick="setLang('es')">ES</button>
+    <button type="button" data-lang="en" onclick="setLang('en')">EN</button>
+  </div>
+
   <!-- Prado-style crest -->
   <svg class="crest" viewBox="0 0 64 64" aria-hidden="true">
     <circle cx="32" cy="32" r="30" fill="none" stroke="#c9a24a" stroke-width="1.5"/>
@@ -357,16 +399,16 @@
   <h1 class="museo">Museo</h1>
   <div class="del-prado">del Prado</div>
   <div class="sala">
-    <span class="tag">Sala Temporal</span>
-    El Campeón y El Gato &middot; Una Serie en Cuatro Escuelas
+    <span class="tag" id="sala-tag">Sala Temporal</span>
+    <span id="sala-title">El Campeón y El Gato &middot; Una Serie en Cuatro Escuelas</span>
   </div>
 </header>
 
 <div class="gallery">
 
   <div class="stage">
-    <button class="nav-arrow prev" aria-label="Anterior" onclick="prev()">‹</button>
-    <button class="nav-arrow next" aria-label="Siguiente" onclick="next()">›</button>
+    <button class="nav-arrow prev" id="prevBtn" aria-label="Anterior" onclick="prev()">‹</button>
+    <button class="nav-arrow next" id="nextBtn" aria-label="Siguiente" onclick="next()">›</button>
 
     <div class="frame">
       <div class="canvas-wrap" id="canvas">
@@ -394,45 +436,106 @@
 </div>
 
 <footer>
-  <div class="mark">Reservado &middot; Adquisición Reciente</div>
-  <div style="margin-top:8px">Colección particular &middot; Serie: <em>Cat Boxing Club</em></div>
+  <div class="mark" id="footMark">Reservado &middot; Adquisición Reciente</div>
+  <div style="margin-top:8px" id="footSub">Colección particular &middot; Serie: <em>Cat Boxing Club</em></div>
 </footer>
 
 <script>
   const WORKS = [
     {
       src: 'images/IMG_0262.jpeg',
-      inv: 'P-2601 · Sala 009B',
-      title: 'El Campeón contra el Gato',
-      artist: 'Atribuido al círculo del Greco',
-      meta: 'c. 1598 · Óleo sobre lienzo · 118 × 102 cm',
-      commentary: 'Vista de Toledo al fondo, figuras alargadas, luz divina que atraviesa nubes tormentosas — todos los rasgos canónicos del Greco. El púgil asume la postura de un mártir manierista; el gato, iluminado celestialmente, cumple el papel del santo ascendente. Los rostros desdibujados tras las cuerdas recuerdan al coro anónimo del Entierro del Conde de Orgaz.'
+      es: {
+        inv: 'P-2601 · Sala 009B',
+        title: 'El Campeón contra el Gato',
+        artist: 'Atribuido al círculo del Greco',
+        meta: 'c. 1598 · Óleo sobre lienzo · 118 × 102 cm',
+        commentary: 'Vista de Toledo al fondo, figuras alargadas, luz divina que atraviesa nubes tormentosas — todos los rasgos canónicos del Greco. El púgil asume la postura de un mártir manierista; el gato, iluminado celestialmente, cumple el papel del santo ascendente. Los rostros desdibujados tras las cuerdas recuerdan al coro anónimo del Entierro del Conde de Orgaz.'
+      },
+      en: {
+        inv: 'P-2601 · Room 009B',
+        title: 'The Champion vs. The Cat',
+        artist: 'Attributed to the Circle of El Greco',
+        meta: 'c. 1598 · Oil on canvas · 118 × 102 cm',
+        commentary: 'View of Toledo in the background, elongated figures, divine light piercing stormy clouds — all the canonical hallmarks of El Greco. The boxer assumes the posture of a Mannerist martyr; the cat, celestially illuminated, plays the ascending saint. The blurred faces behind the ropes recall the anonymous chorus in The Burial of the Count of Orgaz.'
+      }
     },
     {
       src: 'images/IMG_6550.jpeg',
-      inv: 'P-3470 · Sala 067',
-      title: 'Round 1',
-      artist: 'Escuela de Goya — Pinturas Negras',
-      meta: 'c. 1820 · Óleo sobre yeso trasladado a lienzo · 88 × 112 cm',
-      commentary: 'Tenebrismo desaturado y atmósfera asfixiante propias de la última etapa goyesca en la Quinta del Sordo. El poste de madera con la inscripción "Round 1" funciona como sátira moral: el primer asalto es el único asalto. Las caras espectadoras tras las cuerdas son herederas directas del Aquelarre y del Duelo a Garrotazos.'
+      es: {
+        inv: 'P-3470 · Sala 067',
+        title: 'Round 1',
+        artist: 'Escuela de Goya — Pinturas Negras',
+        meta: 'c. 1820 · Óleo sobre yeso trasladado a lienzo · 88 × 112 cm',
+        commentary: 'Tenebrismo desaturado y atmósfera asfixiante propias de la última etapa goyesca en la Quinta del Sordo. El poste de madera con la inscripción "Round 1" funciona como sátira moral: el primer asalto es el único asalto. Las caras espectadoras tras las cuerdas son herederas directas del Aquelarre y del Duelo a Garrotazos.'
+      },
+      en: {
+        inv: 'P-3470 · Room 067',
+        title: 'Round 1',
+        artist: 'School of Goya — Black Paintings',
+        meta: 'c. 1820 · Oil on plaster, transferred to canvas · 88 × 112 cm',
+        commentary: 'Desaturated tenebrism and suffocating atmosphere characteristic of Goya\'s late period at the Quinta del Sordo. The wooden post inscribed "Round 1" functions as moral satire: the first round is the only round. The spectator faces behind the ropes are direct descendants of Witches\' Sabbath and Duel with Cudgels.'
+      }
     },
     {
       src: 'images/IMG_6266.jpeg',
-      inv: 'P-2823 · Sala 056A',
-      title: 'El Jardín de las Delicias Felinas',
-      artist: 'Atribuido a El Bosco y taller',
-      meta: 'c. 1505 · Óleo sobre tabla de roble · 94 × 86 cm',
-      commentary: 'Un paralelismo menor del Jardín de las Delicias. El ring ocupa el orden central; los márgenes descienden al tormento boschiano habitual — peces con cabeza de felino, híbridos de pico y mandíbula, torres en llamas al horizonte. El cartel que se lee "ROID" — parodia del "PARADISUS" — anticipa el sarcasmo iconográfico del maestro.'
+      es: {
+        inv: 'P-2823 · Sala 056A',
+        title: 'El Jardín de las Delicias Felinas',
+        artist: 'Atribuido a El Bosco y taller',
+        meta: 'c. 1505 · Óleo sobre tabla de roble · 94 × 86 cm',
+        commentary: 'Un paralelismo menor del Jardín de las Delicias. El ring ocupa el orden central; los márgenes descienden al tormento boschiano habitual — peces con cabeza de felino, híbridos de pico y mandíbula, torres en llamas al horizonte. El cartel que se lee "ROID" — parodia del "PARADISUS" — anticipa el sarcasmo iconográfico del maestro.'
+      },
+      en: {
+        inv: 'P-2823 · Room 056A',
+        title: 'The Garden of Feline Delights',
+        artist: 'Attributed to Hieronymus Bosch and workshop',
+        meta: 'c. 1505 · Oil on oak panel · 94 × 86 cm',
+        commentary: 'A minor parallel to The Garden of Earthly Delights. The ring occupies the central order; the margins descend into typical Boschian torment — cat-headed fish, beak-and-jaw hybrids, burning towers on the horizon. The sign reading "ROID" — a parody of "PARADISUS" — anticipates the master\'s iconographic sarcasm.'
+      }
     },
     {
       src: 'images/IMG_6674.jpeg',
-      inv: 'P-7012 · Sala Contemporánea',
-      title: 'Le Boxeur et le Chat',
-      artist: 'Escuela de Picasso / Juan Gris',
-      meta: 'c. 1912 · Óleo sobre lienzo · Cubismo analítico · 72 × 64 cm',
-      commentary: 'La escena descompuesta en planos geométricos superpuestos. Las orejas del gato se convierten en vectores triangulares; los guantes se reducen a esferas cromáticas rojas. Eco parisino de la disputa madrileña anterior — el mismo drama trasladado al vocabulario de Les Demoiselles, filtrado por la paleta austera de Juan Gris.'
+      es: {
+        inv: 'P-7012 · Sala Contemporánea',
+        title: 'Le Boxeur et le Chat',
+        artist: 'Escuela de Picasso / Juan Gris',
+        meta: 'c. 1912 · Óleo sobre lienzo · Cubismo analítico · 72 × 64 cm',
+        commentary: 'La escena descompuesta en planos geométricos superpuestos. Las orejas del gato se convierten en vectores triangulares; los guantes se reducen a esferas cromáticas rojas. Eco parisino de la disputa madrileña anterior — el mismo drama trasladado al vocabulario de Les Demoiselles, filtrado por la paleta austera de Juan Gris.'
+      },
+      en: {
+        inv: 'P-7012 · Contemporary Gallery',
+        title: 'Le Boxeur et le Chat',
+        artist: 'School of Picasso / Juan Gris',
+        meta: 'c. 1912 · Oil on canvas · Analytic Cubism · 72 × 64 cm',
+        commentary: 'The scene broken down into superimposed geometric planes. The cat\'s ears become triangular vectors; the gloves reduce to red chromatic spheres. A Parisian echo of the earlier Madrid dispute — the same drama translated into the vocabulary of Les Demoiselles, filtered through Juan Gris\'s austere palette.'
+      }
     }
   ];
+
+  const UI = {
+    es: {
+      salaTag: 'Sala Temporal',
+      salaTitle: 'El Campeón y El Gato &middot; Una Serie en Cuatro Escuelas',
+      prev: 'Anterior',
+      next: 'Siguiente',
+      auto: 'Auto',
+      pause: 'Pausar',
+      footMark: 'Reservado &middot; Adquisición Reciente',
+      footSub: 'Colección particular &middot; Serie: <em>Cat Boxing Club</em>'
+    },
+    en: {
+      salaTag: 'Special Exhibit',
+      salaTitle: 'The Champion and the Cat &middot; A Series in Four Schools',
+      prev: 'Previous',
+      next: 'Next',
+      auto: 'Auto',
+      pause: 'Pause',
+      footMark: 'Reserved &middot; Recent Acquisition',
+      footSub: 'Private collection &middot; Series: <em>Cat Boxing Club</em>'
+    }
+  };
+
+  let currentLang = 'es';
 
   let current = 0;
   let autoPlay = null;
@@ -443,11 +546,11 @@
   const counter = document.getElementById('counter');
   const thumbs = document.getElementById('thumbs');
 
-  // Build thumbnails
+  // Build thumbnails (alt text will be refreshed on language change)
   WORKS.forEach((w, i) => {
     const t = document.createElement('div');
     t.className = 'thumb' + (i === 0 ? ' active' : '');
-    t.innerHTML = `<img src="${w.src}" alt="${w.title}"/>`;
+    t.innerHTML = `<img src="${w.src}" alt=""/>`;
     t.addEventListener('click', () => go(i));
     thumbs.appendChild(t);
   });
@@ -457,34 +560,59 @@
   function render(i) {
     current = (i + WORKS.length) % WORKS.length;
     const w = WORKS[current];
+    const L = w[currentLang];
 
     // fade out, preload new image, then swap src and fade in
     canvas.classList.add('fading');
     const pre = new Image();
     pre.onload = () => {
       canvasImg.src = w.src;
-      canvasImg.alt = w.title;
-      // next frame, fade back in (frame will size to the new image's aspect ratio)
-      requestAnimationFrame(() => {
-        canvas.classList.remove('fading');
-      });
+      canvasImg.alt = L.title;
+      requestAnimationFrame(() => canvas.classList.remove('fading'));
     };
     pre.src = w.src;
 
     // placard
     placard.innerHTML = `
-      <div class="inv">${w.inv}</div>
-      <h2>${w.title}</h2>
-      <div class="artist">${w.artist}</div>
-      <div class="meta">${w.meta}</div>
-      <div class="commentary">${w.commentary}</div>
+      <div class="inv">${L.inv}</div>
+      <h2>${L.title}</h2>
+      <div class="artist">${L.artist}</div>
+      <div class="meta">${L.meta}</div>
+      <div class="commentary">${L.commentary}</div>
     `;
     counter.textContent = `${ROMAN[current]} / IV`;
 
     // thumbs
     thumbs.querySelectorAll('.thumb').forEach((t, idx) => {
       t.classList.toggle('active', idx === current);
+      const imgEl = t.querySelector('img');
+      if (imgEl) imgEl.alt = WORKS[idx][currentLang].title;
     });
+  }
+
+  function applyLangChrome() {
+    const ui = UI[currentLang];
+    document.getElementById('sala-tag').textContent = ui.salaTag;
+    document.getElementById('sala-title').innerHTML = ui.salaTitle;
+    document.getElementById('prevBtn').setAttribute('aria-label', ui.prev);
+    document.getElementById('nextBtn').setAttribute('aria-label', ui.next);
+    document.getElementById('footMark').innerHTML = ui.footMark;
+    document.getElementById('footSub').innerHTML = ui.footSub;
+    // auto button reflects current state
+    const ab = document.getElementById('autoBtn');
+    ab.textContent = autoPlay ? ui.pause : ui.auto;
+    // toggle pills
+    document.querySelectorAll('.lang-toggle button').forEach(b => {
+      b.classList.toggle('active', b.dataset.lang === currentLang);
+    });
+    document.documentElement.lang = currentLang;
+  }
+
+  function setLang(lang) {
+    if (!UI[lang] || lang === currentLang) return;
+    currentLang = lang;
+    applyLangChrome();
+    render(current); // re-render placard in new language
   }
 
   function go(i)    { render(i); }
@@ -493,15 +621,16 @@
 
   function toggleAuto() {
     const btn = document.getElementById('autoBtn');
+    const ui = UI[currentLang];
     if (autoPlay) {
       clearInterval(autoPlay);
       autoPlay = null;
       btn.classList.remove('on');
-      btn.textContent = 'Auto';
+      btn.textContent = ui.auto;
     } else {
       autoPlay = setInterval(next, 5000);
       btn.classList.add('on');
-      btn.textContent = 'Pausar';
+      btn.textContent = ui.pause;
     }
   }
 
@@ -511,6 +640,7 @@
     else if (e.key === 'ArrowLeft') prev();
   });
 
+  applyLangChrome();
   render(0);
 </script>
 </body>
