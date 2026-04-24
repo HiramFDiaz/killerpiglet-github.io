@@ -157,11 +157,10 @@
     display: block;
     width: 100%;
     height: auto;
-    opacity: 0;
-    transition: opacity 0.55s ease;
+    opacity: 1;
+    transition: opacity 0.35s ease;
   }
-  .canvas-wrap img.active { opacity: 1; }
-  .canvas-wrap img:not(:first-child) { position: absolute; inset: 0; }
+  .canvas-wrap.fading img { opacity: 0; }
 
   /* Gallery light bloom on canvas */
   .canvas-wrap::after {
@@ -371,10 +370,7 @@
 
     <div class="frame">
       <div class="canvas-wrap" id="canvas">
-        <img src="images/IMG_0262.jpeg" alt="El Campeón contra el Gato — El Greco style" class="active" data-slide="0"/>
-        <img src="images/IMG_6550.jpeg" alt="Round 1 — Goya Black Paintings style" data-slide="1"/>
-        <img src="images/IMG_6266.jpeg" alt="El Jardín de las Delicias Felinas — Bosch style" data-slide="2"/>
-        <img src="images/IMG_6674.jpeg" alt="Le Boxeur et le Chat — Cubist style" data-slide="3"/>
+        <img id="canvas-img" src="images/IMG_0262.jpeg" alt="El Campeón contra el Gato — El Greco style"/>
       </div>
     </div>
   </div>
@@ -456,18 +452,26 @@
     thumbs.appendChild(t);
   });
 
-  // Set slide index attributes on images to match WORKS order
-  const imgs = canvas.querySelectorAll('img');
+  const canvasImg = document.getElementById('canvas-img');
 
   function render(i) {
     current = (i + WORKS.length) % WORKS.length;
-    // fade images
-    imgs.forEach((img, idx) => {
-      const want = WORKS[current].src;
-      img.classList.toggle('active', img.getAttribute('src') === want);
-    });
-    // placard
     const w = WORKS[current];
+
+    // fade out, preload new image, then swap src and fade in
+    canvas.classList.add('fading');
+    const pre = new Image();
+    pre.onload = () => {
+      canvasImg.src = w.src;
+      canvasImg.alt = w.title;
+      // next frame, fade back in (frame will size to the new image's aspect ratio)
+      requestAnimationFrame(() => {
+        canvas.classList.remove('fading');
+      });
+    };
+    pre.src = w.src;
+
+    // placard
     placard.innerHTML = `
       <div class="inv">${w.inv}</div>
       <h2>${w.title}</h2>
@@ -476,6 +480,7 @@
       <div class="commentary">${w.commentary}</div>
     `;
     counter.textContent = `${ROMAN[current]} / IV`;
+
     // thumbs
     thumbs.querySelectorAll('.thumb').forEach((t, idx) => {
       t.classList.toggle('active', idx === current);
