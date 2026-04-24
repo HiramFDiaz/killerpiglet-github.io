@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Pets Compared: Cat vs Goldfish vs Chia Pet vs Pet Rock</title>
+<style>
+  :root {
+    --cream:     #f4e6cf;
+    --cream-2:   #ecd9b6;
+    --mustard:   #d9a84a;
+    --tomato:    #c5432b;
+    --tomato-2:  #9a2e1a;
+    --ink:       #2a1a0a;
+    --olive:     #6a7a35;
+    --teal:      #2e7a7a;
+    --shadow:    rgba(0,0,0,0.18);
+
+    --cat:   #e89650;
+    --fish:  #ef8a3a;
+    --chia:  #6a9a3a;
+    --rock:  #8a7a68;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    font-family: "Georgia", "Times New Roman", serif;
+    color: var(--ink);
+    background: var(--cream);
+    background-image:
+      radial-gradient(circle at 10% 20%, rgba(217,168,74,0.25) 0%, transparent 40%),
+      radial-gradient(circle at 90% 80%, rgba(197,67,43,0.12)  0%, transparent 45%),
+      repeating-linear-gradient(45deg, rgba(42,26,10,0.02) 0 2px, transparent 2px 8px);
+    line-height: 1.5;
+  }
+
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  /* ---------- HEADER / INFOMERCIAL STYLING ---------- */
+  header { position: relative; text-align: center; padding: 30px 0 20px; }
+
+  .eyebrow {
+    display: inline-block;
+    background: var(--tomato);
+    color: #fff;
+    font-family: "Helvetica Neue", Arial Black, sans-serif;
+    font-weight: 900;
+    font-size: 12px;
+    letter-spacing: 0.35em;
+    padding: 5px 16px;
+    text-transform: uppercase;
+    transform: rotate(-1.5deg);
+    box-shadow: 3px 3px 0 var(--tomato-2);
+    margin-bottom: 18px;
+  }
+
+  h1 {
+    font-family: "Helvetica Neue", Arial Black, sans-serif;
+    font-weight: 900;
+    font-size: clamp(2.2rem, 6vw, 4rem);
+    line-height: 0.95;
+    margin: 0 0 10px;
+    color: var(--tomato-2);
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    text-shadow: 3px 3px 0 var(--mustard);
+  }
+
+  .subhead {
+    font-style: italic;
+    font-size: 1.1rem;
+    color: var(--ink);
+    max-width: 56ch;
+    margin: 0 auto 16px;
+  }
+
+  /* Starburst "NEW!" badge */
+  .starburst {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    width: 110px;
+    height: 110px;
+  }
+  @media (max-width: 720px) {
+    .starburst { width: 80px; height: 80px; top: 4px; right: 4px; }
+  }
+
+  /* ---------- CONTENDER CARDS ---------- */
+  .contenders {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin: 30px 0 40px;
+  }
+  @media (max-width: 900px) { .contenders { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 520px) { .contenders { grid-template-columns: 1fr; } }
+
+  .card {
+    background: #fffaf0;
+    border: 3px solid var(--ink);
+    border-radius: 10px;
+    padding: 16px 14px 18px;
+    position: relative;
+    box-shadow: 6px 6px 0 var(--shadow);
+    text-align: center;
+  }
+
+  .card .portrait {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    background: var(--cream-2);
+    border: 2px solid var(--ink);
+  }
+  .card .portrait svg { width: 80%; height: 80%; }
+
+  .card h2 {
+    font-family: "Helvetica Neue", Arial Black, sans-serif;
+    font-weight: 900;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin: 0 0 4px;
+  }
+  .card .tagline {
+    font-style: italic;
+    font-size: 0.88rem;
+    color: #5a4028;
+    min-height: 2.4em;
+  }
+
+  .card .price {
+    display: inline-block;
+    margin-top: 10px;
+    font-family: "Helvetica Neue", Arial Black, sans-serif;
+    font-size: 0.8rem;
+    padding: 3px 10px;
+    background: var(--mustard);
+    color: var(--ink);
+    border: 2px solid var(--ink);
+    border-radius: 20px;
+  }
+
+  /* ---------- TABLE ---------- */
+  .table-title {
+    font-family: "Helvetica Neue", Arial Black, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.95rem;
+    color: var(--tomato);
+    margin: 40px 0 12px;
+    border-bottom: 3px double var(--ink);
+    padding-bottom: 6px;
+  }
+
+  .table-scroll {
+    overflow-x: auto;
+    border: 3px solid var(--ink);
+    background: #fffaf0;
+    box-shadow: 6px 6px 0 var(--shadow);
+    border-radius: 6px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+    min-width: 780px;
+  }
+
+  thead th {
+    background: var(--ink);
+    color: var(--cream);
+    text-align: left;
+    padding: 12px 12px;
+    font-family: "Helvetica Neue", Arial Black, sans-serif;
+    font-size: 0.82rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  thead th.cat  { background: linear-gradient(180deg, #e89650 0%, #b86820 100%); color: #fff; }
+  thead th.fish { background: linear-gradient(180deg, #ef8a3a 0%, #c25a1a 100%); color: #fff; }
+  thead th.chia { background: linear-gradient(180deg, #7aad4a 0%, #4a7a20 100%); color: #fff; }
+  thead th.rock { background: linear-gradient(180deg, #a89688 0%, #6a5a4a 100%); color: #fff; }
+
+  tbody th {
+    text-align: left;
+    font-family: "Helvetica Neue", Arial Black, sans-serif;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 12px 12px;
+    background: var(--cream-2);
+    border-bottom: 1px solid #d8c5a0;
+    color: var(--tomato-2);
+    white-space: nowrap;
+    vertical-align: top;
+  }
+  tbody td {
+    padding: 12px 12px;
+    border-bottom: 1px solid #e0d0b0;
+    vertical-align: top;
+  }
+  tbody tr:nth-child(even) td { background: #fdf4e1; }
+  tbody tr:hover td { background: #fdecb8; }
+
+  /* ---------- VERDICT ---------- */
+  .verdict {
+    margin-top: 40px;
+    background: var(--ink);
+    color: var(--cream);
+    padding: 26px 28px;
+    border-radius: 10px;
+    box-shadow: 6px 6px 0 var(--shadow);
+    position: relative;
+  }
+  .verdict h3 {
+    font-family: "Helvetica Neue", Arial Black, sans-serif;
+    font-size: 0.95rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--mustard);
+    margin: 0 0 14px;
+  }
+  .verdict p { margin: 0 0 10px; }
+  .verdict .winner-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-top: 18px;
+  }
+  @media (max-width: 760px) { .verdict .winner-row { grid-template-columns: repeat(2, 1fr); } }
+  .winner-card {
+    background: rgba(255,250,240,0.08);
+    border: 1px solid rgba(255,250,240,0.2);
+    border-radius: 6px;
+    padding: 12px 14px;
+  }
+  .winner-card h4 {
+    font-family: "Helvetica Neue", Arial Black, sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--mustard);
+    margin: 0 0 6px;
+  }
+  .winner-card p { margin: 0; font-size: 0.92rem; }
+
+  footer {
+    margin-top: 50px;
+    text-align: center;
+    font-size: 0.82rem;
+    color: #6a5a42;
+    font-style: italic;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <!-- Starburst NEW! badge -->
+    <svg class="starburst" viewBox="0 0 100 100" aria-hidden="true">
+      <g transform="translate(50 50)">
+        <polygon points="0,-48 6,-16 38,-30 14,-6 50,0 14,6 38,30 6,16 0,48 -6,16 -38,30 -14,6 -50,0 -14,-6 -38,-30 -6,-16"
+                 fill="#c5432b" stroke="#2a1a0a" stroke-width="2"/>
+        <text x="0" y="-4" text-anchor="middle" font-family="Helvetica Neue, Arial Black" font-weight="900"
+              font-size="14" fill="#fff">ONLY</text>
+        <text x="0" y="14" text-anchor="middle" font-family="Helvetica Neue, Arial Black" font-weight="900"
+              font-size="14" fill="#fff">$19.95!</text>
+      </g>
+    </svg>
+
+    <div class="eyebrow">A Fair &amp; Balanced Review</div>
+    <h1>Pets Compared</h1>
+    <p class="subhead">
+      Four contenders. One couch. One windowsill. One tank. One shelf.
+      From purring affection to inert geology, ranked honestly.
+    </p>
+  </header>
+
+  <!-- ============ CONTENDER CARDS ============ -->
+  <div class="contenders">
+
+    <!-- CAT -->
+    <div class="card">
+      <div class="portrait">
+        <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="32" cy="32" r="30" fill="#ffb578"/>
+          <path d="M10 14 L22 6 L22 24 Z" fill="#b86820"/>
+          <path d="M54 14 L42 6 L42 24 Z" fill="#b86820"/>
+          <ellipse cx="32" cy="36" rx="22" ry="20" fill="#ffc89a"/>
+          <path d="M32 4 L32 18" stroke="#a85a20" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M24 6 L25 20" stroke="#a85a20" stroke-width="2" stroke-linecap="round"/>
+          <path d="M40 6 L39 20" stroke="#a85a20" stroke-width="2" stroke-linecap="round"/>
+          <ellipse cx="24" cy="30" rx="3" ry="4.5" fill="#4a8240"/>
+          <ellipse cx="40" cy="30" rx="3" ry="4.5" fill="#4a8240"/>
+          <ellipse cx="24" cy="30" rx="0.9" ry="4" fill="#1a1208"/>
+          <ellipse cx="40" cy="30" rx="0.9" ry="4" fill="#1a1208"/>
+          <path d="M30 42 L34 42 L32 45 Z" fill="#c44a40"/>
+          <path d="M32 45 Q 30 48 28 47" fill="none" stroke="#2a1208" stroke-width="1.2" stroke-linecap="round"/>
+          <path d="M32 45 Q 34 48 36 47" fill="none" stroke="#2a1208" stroke-width="1.2" stroke-linecap="round"/>
+          <line x1="18" y1="42" x2="6" y2="40" stroke="#3a2a1a"/>
+          <line x1="18" y1="44" x2="6" y2="46" stroke="#3a2a1a"/>
+          <line x1="46" y1="42" x2="58" y2="40" stroke="#3a2a1a"/>
+          <line x1="46" y1="44" x2="58" y2="46" stroke="#3a2a1a"/>
+        </svg>
+      </div>
+      <h2>Cat</h2>
+      <div class="tagline">"I acknowledge you. Occasionally. On my terms."</div>
+      <div class="price">$500–1,500 / yr</div>
+    </div>
+
+    <!-- GOLDFISH -->
+    <div class="card">
+      <div class="portrait">
+        <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+          <!-- water -->
+          <rect x="2" y="10" width="60" height="50" fill="#b8e0e8" rx="4"/>
+          <path d="M2 18 Q 16 14 32 18 T 62 18" stroke="#8fcfd8" stroke-width="1" fill="none" opacity="0.6"/>
+          <path d="M2 50 Q 16 46 32 50 T 62 50" stroke="#8fcfd8" stroke-width="1" fill="none" opacity="0.6"/>
+          <!-- fish body -->
+          <ellipse cx="28" cy="35" rx="16" ry="10" fill="#ef8a3a"/>
+          <!-- tail -->
+          <path d="M44 35 L58 26 L54 35 L58 44 Z" fill="#ef8a3a"/>
+          <!-- top fin -->
+          <path d="M22 25 L30 16 L34 25 Z" fill="#d56a20"/>
+          <!-- bottom fin -->
+          <path d="M26 44 L30 50 L34 44 Z" fill="#d56a20"/>
+          <!-- eye -->
+          <circle cx="18" cy="32" r="2.5" fill="#fff"/>
+          <circle cx="18" cy="32" r="1.4" fill="#1a0a00"/>
+          <!-- bubbles -->
+          <circle cx="50" cy="22" r="2" fill="#fff" opacity="0.7"/>
+          <circle cx="55" cy="16" r="1.3" fill="#fff" opacity="0.7"/>
+          <circle cx="47" cy="14" r="0.9" fill="#fff" opacity="0.7"/>
+        </svg>
+      </div>
+      <h2>Goldfish</h2>
+      <div class="tagline">"I will quietly outlive your marriage."</div>
+      <div class="price">$240–600 / yr</div>
+    </div>
+
+    <!-- CHIA PET -->
+    <div class="card">
+      <div class="portrait">
+        <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+          <!-- terracotta pot body -->
+          <path d="M14 34 Q 32 44 50 34 L 50 58 Q 32 62 14 58 Z" fill="#a85a38"/>
+          <path d="M14 34 Q 32 42 50 34 L 50 36 Q 32 44 14 36 Z" fill="#8a4828"/>
+          <!-- face on pot -->
+          <circle cx="25" cy="46" r="2" fill="#1a0a00"/>
+          <circle cx="39" cy="46" r="2" fill="#1a0a00"/>
+          <path d="M24 52 Q 32 56 40 52" fill="none" stroke="#1a0a00" stroke-width="1.5" stroke-linecap="round"/>
+          <!-- chia sprouts -->
+          <g fill="#6a9a3a">
+            <ellipse cx="20" cy="30" rx="3" ry="7"/>
+            <ellipse cx="26" cy="25" rx="3" ry="9"/>
+            <ellipse cx="32" cy="22" rx="3" ry="11"/>
+            <ellipse cx="38" cy="25" rx="3" ry="9"/>
+            <ellipse cx="44" cy="30" rx="3" ry="7"/>
+          </g>
+          <g fill="#4a7a20">
+            <ellipse cx="22" cy="32" rx="2" ry="5"/>
+            <ellipse cx="30" cy="28" rx="2" ry="7"/>
+            <ellipse cx="36" cy="28" rx="2" ry="7"/>
+            <ellipse cx="42" cy="32" rx="2" ry="5"/>
+          </g>
+        </svg>
+      </div>
+      <h2>Chia Pet</h2>
+      <div class="tagline">"Watch me sprout. Then die. Then sprout again."</div>
+      <div class="price">~$20 + $5/yr seeds</div>
+    </div>
+
+    <!-- PET ROCK -->
+    <div class="card">
+      <div class="portrait">
+        <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+          <!-- straw bed -->
+          <g stroke="#c49858" stroke-width="1" opacity="0.7">
+            <line x1="6"  y1="52" x2="58" y2="52"/>
+            <line x1="10" y1="55" x2="54" y2="55"/>
+            <line x1="8"  y1="58" x2="56" y2="58"/>
+          </g>
+          <!-- rock body -->
+          <path d="M14 46 Q 10 30 20 22 Q 32 14 44 22 Q 54 30 50 46 Z" fill="#9a8878" stroke="#4a3a2a" stroke-width="1.5"/>
+          <!-- highlight -->
+          <path d="M20 26 Q 26 22 34 24" stroke="#d8c8b8" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <!-- eyes (googly) -->
+          <circle cx="24" cy="34" r="4" fill="#fff" stroke="#1a0a00" stroke-width="1"/>
+          <circle cx="40" cy="34" r="4" fill="#fff" stroke="#1a0a00" stroke-width="1"/>
+          <circle cx="24.5" cy="35" r="1.6" fill="#1a0a00"/>
+          <circle cx="40.5" cy="35" r="1.6" fill="#1a0a00"/>
+          <!-- faint smile scratched in -->
+          <path d="M26 42 Q 32 46 38 42" fill="none" stroke="#4a3a2a" stroke-width="1.3" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <h2>Pet Rock</h2>
+      <div class="tagline">"I am here. I will always be here."</div>
+      <div class="price">$0–10, one time</div>
+    </div>
+  </div>
+
+  <!-- ============ THE TABLE ============ -->
+  <h3 class="table-title">The Side-by-Side</h3>
+
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th>Attribute</th>
+          <th class="cat">Cat</th>
+          <th class="fish">Goldfish</th>
+          <th class="chia">Chia Pet</th>
+          <th class="rock">Pet Rock</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th>Kingdom</th>
+          <td>Animalia (mammal)</td>
+          <td>Animalia (fish)</td>
+          <td>Plantae (<em>Salvia hispanica</em> on terracotta)</td>
+          <td>Mineralia (sedimentary, usually)</td>
+        </tr>
+        <tr>
+          <th>Lifespan</th>
+          <td>13–20 years</td>
+          <td>10–30 years (yes, really)</td>
+          <td>2–4 weeks per sprout cycle; pot is immortal</td>
+          <td>~4.5 billion years</td>
+        </tr>
+        <tr>
+          <th>Startup cost</th>
+          <td>$50–500 adoption + $200 supplies</td>
+          <td>$5–15 fish + $100–300 tank setup</td>
+          <td>$15–25 one-time</td>
+          <td>$0 (driveway) to $10 (novelty box with straw)</td>
+        </tr>
+        <tr>
+          <th>Ongoing cost</th>
+          <td>$500–1,500 / yr (food, litter, vet)</td>
+          <td>$20–50 / mo (food, filter, electricity)</td>
+          <td>~$5/yr in seed refills</td>
+          <td>$0. Forever.</td>
+        </tr>
+        <tr>
+          <th>Daily upkeep</th>
+          <td>Feed, clean litter, ignore affection demands</td>
+          <td>Feed, check water level, admire</td>
+          <td>Mist once</td>
+          <td>Observe its continued existence</td>
+        </tr>
+        <tr>
+          <th>Space needed</th>
+          <td>Apartment minimum</td>
+          <td>20+ gallon tank (despite what the carnival said)</td>
+          <td>Windowsill</td>
+          <td>Palm of hand</td>
+        </tr>
+        <tr>
+          <th>Affection returned</th>
+          <td>Conditional, cat-dependent, occasionally devastating</td>
+          <td>None, but it will look at you</td>
+          <td>None; it does grow, which is affection-adjacent</td>
+          <td>None. Zero expectations, zero disappointment.</td>
+        </tr>
+        <tr>
+          <th>Trainability</th>
+          <td>Litter box, a few tricks with bribes</td>
+          <td>Surprisingly yes — can learn to push levers</td>
+          <td>No</td>
+          <td>Masters Sit and Stay immediately</td>
+        </tr>
+        <tr>
+          <th>Mess factor</th>
+          <td>High — hair, hairballs, knocked items, dawn zoomies</td>
+          <td>Contained to tank; water changes are messy</td>
+          <td>Minor water spray; no soil</td>
+          <td>Zero</td>
+        </tr>
+        <tr>
+          <th>Allergy risk</th>
+          <td>High (dander is legendary)</td>
+          <td>Near zero</td>
+          <td>Near zero unless you're allergic to chia seeds</td>
+          <td>Zero (unless silicosis, in which case don't inhale it)</td>
+        </tr>
+        <tr>
+          <th>Travel compatibility</th>
+          <td>Needs sitter or cattery</td>
+          <td>Auto-feeder or neighbor</td>
+          <td>Leave it; resume watering on return</td>
+          <td>Pocket-portable; TSA-approved</td>
+        </tr>
+        <tr>
+          <th>Risk of heartbreak</th>
+          <td>Very high. You will cry.</td>
+          <td>Moderate. Quieter grief. Still grief.</td>
+          <td>Low — death is scheduled and reversible</td>
+          <td>Effectively none. It predates sadness.</td>
+        </tr>
+        <tr>
+          <th>Conversation starter</th>
+          <td>Standard</td>
+          <td>Mildly interesting at parties</td>
+          <td>Instant nostalgia in anyone over 40</td>
+          <td>Elite. Unmatched icebreaker.</td>
+        </tr>
+        <tr>
+          <th>Era / origin</th>
+          <td>Domesticated ~7,500 BCE, Near East</td>
+          <td>Selectively bred in China, ~1,000 years ago</td>
+          <td>Invented by Joseph Enterprises, 1977</td>
+          <td>Gary Dahl, 1975 — sold 1.5 million in 6 months</td>
+        </tr>
+        <tr>
+          <th>Best for</th>
+          <td>People who want conditional love and will clean a litter box</td>
+          <td>Calm aesthetes who like watching something breathe</td>
+          <td>People who want to nurture on a 3-week commitment cycle</td>
+          <td>People correctly allergic to responsibility</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ============ VERDICT ============ -->
+  <div class="verdict">
+    <h3>The Verdict &middot; Best-In-Category</h3>
+    <p>
+      There is no universal winner — the four aren't on the same axis. The cat is a relationship; the goldfish is an
+      aquarium with a pulse; the chia pet is a kitchen timer made of chlorophyll; the pet rock is a novelty item
+      cosplaying as a pet. They serve different psychic needs.
+    </p>
+    <div class="winner-row">
+      <div class="winner-card">
+        <h4>Most affection</h4>
+        <p>Cat, conditionally. Goldfish a distant second on a technicality.</p>
+      </div>
+      <div class="winner-card">
+        <h4>Lowest maintenance</h4>
+        <p>Pet Rock by several orders of magnitude. Chia Pet second.</p>
+      </div>
+      <div class="winner-card">
+        <h4>Best lifespan-to-effort</h4>
+        <p>Goldfish. 25+ years for a $3 flake tub is absurd value.</p>
+      </div>
+      <div class="winner-card">
+        <h4>Best dinner-party story</h4>
+        <p>Pet Rock. Chia Pet in close second for pure 1977 energy.</p>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    Cats domesticate humans. Goldfish wait. Chia pets composting. Pet rocks transcend.
+  </footer>
+</div>
+</body>
+</html>
