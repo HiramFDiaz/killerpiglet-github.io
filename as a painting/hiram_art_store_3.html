@@ -324,90 +324,6 @@
   }
   .controls .auto-btn.on { background: var(--gold); color: var(--wall-deep); }
 
-  /* ---------- SHOP SECTION ---------- */
-  .shop-section {
-    max-width: 720px;
-    margin: 40px auto 0;
-    padding: 0 16px;
-    text-align: center;
-  }
-  .shop-divider {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 28px;
-    color: var(--gold);
-    font-family: "Trajan Pro", "Cinzel", serif;
-    font-size: 0.7rem;
-    letter-spacing: 0.35em;
-    text-transform: uppercase;
-  }
-  .shop-divider::before,
-  .shop-divider::after {
-    content: "";
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(to right, transparent, var(--gold), transparent);
-  }
-  .shop-card {
-    background: linear-gradient(160deg, var(--parchment) 0%, var(--parchment-2) 100%);
-    color: var(--ink);
-    border-radius: 2px;
-    padding: 28px 32px 26px;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.55);
-    position: relative;
-  }
-  .shop-card::before {
-    content: "";
-    position: absolute;
-    inset: 8px;
-    border: 1px solid rgba(138,106,32,0.3);
-    pointer-events: none;
-  }
-  .shop-card .shop-eyebrow {
-    font-size: 10px;
-    letter-spacing: 0.35em;
-    color: var(--gold-deep);
-    text-transform: uppercase;
-    margin-bottom: 8px;
-  }
-  .shop-card h3 {
-    font-family: "Garamond", "Cormorant Garamond", "Times New Roman", serif;
-    font-size: clamp(1.2rem, 2.4vw, 1.6rem);
-    font-style: italic;
-    font-weight: 600;
-    color: var(--ink);
-    margin: 0 0 10px;
-  }
-  .shop-card p {
-    font-size: 0.9rem;
-    color: #4a3825;
-    line-height: 1.55;
-    margin: 0 0 22px;
-    max-width: 480px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  .shop-btn {
-    display: inline-block;
-    background: linear-gradient(135deg, var(--frame-1) 0%, var(--frame-highlight) 50%, var(--frame-1) 100%);
-    color: var(--wall-deep);
-    font-family: "Trajan Pro", "Cinzel", "Times New Roman", serif;
-    font-size: 0.75rem;
-    letter-spacing: 0.32em;
-    text-transform: uppercase;
-    text-decoration: none;
-    padding: 12px 32px;
-    border-radius: 2px;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.35);
-    transition: box-shadow 0.2s, filter 0.2s;
-    font-weight: 700;
-  }
-  .shop-btn:hover {
-    filter: brightness(1.1);
-    box-shadow: 0 6px 22px rgba(0,0,0,0.45);
-  }
-
   /* ---------- FOOTER ---------- */
   footer {
     text-align: center;
@@ -565,17 +481,6 @@
 
 </div>
 
-<!-- SHOP SECTION -->
-<div class="shop-section" id="shopSection">
-  <div class="shop-divider" id="shopDivider">Adquirir Obra</div>
-  <div class="shop-card">
-    <div class="shop-eyebrow" id="shopEyebrow">Edición Limitada · Impresión de Archivo</div>
-    <h3 id="shopTitle">Llévate la Colección</h3>
-    <p id="shopDesc">Impresiones de alta fidelidad de la serie <em>Cat Boxing Club</em>, reproducidas sobre papel de archivo de 300&nbsp;g. Numeradas y firmadas por el artista.</p>
-    <a href="https://hiramster5.gumroad.com/" class="shop-btn" id="shopBtn" target="_blank" rel="noopener">Visitar la Tienda</a>
-  </div>
-</div>
-
 <footer>
   <div class="mark" id="footMark">Reservado &middot; Adquisición Reciente</div>
   <div style="margin-top:8px" id="footSub">Colección particular &middot; Serie: <em>Cat Boxing Club</em></div>
@@ -671,11 +576,6 @@
       pause: 'Pausar',
       footMark: 'Reservado &middot; Adquisición Reciente',
       footSub: 'Colección particular &middot; Serie: <em>Cat Boxing Club</em>',
-      shopDivider: 'Adquirir Obra',
-      shopEyebrow: 'Edición Limitada · Impresión de Archivo',
-      shopTitle: 'Llévate la Colección',
-      shopDesc: 'Impresiones de alta fidelidad de la serie <em>Cat Boxing Club</em>, reproducidas sobre papel de archivo de 300&nbsp;g. Numeradas y firmadas por el artista.',
-      shopBtn: 'Visitar la Tienda',
       buyLabel: 'Lámina &middot; Edición de Archivo',
       buyBtn: 'Comprar Ahora'
     },
@@ -688,11 +588,6 @@
       pause: 'Pause',
       footMark: 'Reserved &middot; Recent Acquisition',
       footSub: 'Private collection &middot; Series: <em>Cat Boxing Club</em>',
-      shopDivider: 'Acquire a Work',
-      shopEyebrow: 'Limited Edition · Archival Print',
-      shopTitle: 'Take the Collection Home',
-      shopDesc: 'High-fidelity prints from the <em>Cat Boxing Club</em> series, reproduced on 300&nbsp;g archival paper. Numbered and signed by the artist.',
-      shopBtn: 'Visit the Shop',
       buyLabel: 'Archival Fine Art Print',
       buyBtn: 'Buy Now'
     }
@@ -777,11 +672,6 @@
     document.getElementById('nextBtn').setAttribute('aria-label', ui.next);
     document.getElementById('footMark').innerHTML = ui.footMark;
     document.getElementById('footSub').innerHTML = ui.footSub;
-    document.getElementById('shopDivider').textContent = ui.shopDivider;
-    document.getElementById('shopEyebrow').textContent = ui.shopEyebrow;
-    document.getElementById('shopTitle').textContent = ui.shopTitle;
-    document.getElementById('shopDesc').innerHTML = ui.shopDesc;
-    document.getElementById('shopBtn').textContent = ui.shopBtn;
     // auto button reflects current state
     const ab = document.getElementById('autoBtn');
     ab.textContent = autoPlay ? ui.pause : ui.auto;
