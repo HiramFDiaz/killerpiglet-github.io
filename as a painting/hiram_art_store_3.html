@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Museo del Prado — Sala Temporal: El Campeón y El Gato</title>
+<style>
+  :root {
+    --wall:         #4a1f1f;
+    --wall-deep:    #321416;
+    --wall-light:   #5e2a28;
+    --parchment:    #f0e3c2;
+    --parchment-2:  #e6d7b0;
+    --ink:          #2a1810;
+    --gold:         #c9a24a;
+    --gold-deep:    #8a6a20;
+    --frame-1:      #6a4820;
+    --frame-2:      #3a2410;
+    --frame-highlight: #e8c878;
+    --muted:        #8a7a5a;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--wall);
+    color: var(--parchment);
+    font-family: "Garamond", "Cormorant Garamond", "Times New Roman", serif;
+    line-height: 1.45;
+    overflow-x: hidden;
+  }
+
+  body {
+    background:
+      radial-gradient(ellipse at top, var(--wall-light) 0%, var(--wall) 50%, var(--wall-deep) 100%),
+      repeating-linear-gradient(0deg, rgba(0,0,0,0.05) 0 1px, transparent 1px 3px);
+    min-height: 100vh;
+  }
+
+  /* ---------- MUSEUM HEADER ---------- */
+  header {
+    text-align: center;
+    padding: 34px 20px 12px;
+    border-bottom: 1px solid rgba(201,162,74,0.25);
+  }
+  header .crest {
+    width: 52px;
+    height: 52px;
+    margin: 0 auto 12px;
+    display: block;
+  }
+  header .museo {
+    font-family: "Trajan Pro", "Cinzel", "Times New Roman", serif;
+    font-size: clamp(20px, 3.6vw, 32px);
+    letter-spacing: 0.38em;
+    font-weight: 600;
+    color: var(--gold);
+    margin: 0;
+    text-transform: uppercase;
+  }
+  header .del-prado {
+    font-family: "Trajan Pro", "Cinzel", "Times New Roman", serif;
+    font-size: clamp(14px, 2.2vw, 19px);
+    letter-spacing: 0.32em;
+    color: var(--parchment);
+    margin-top: 4px;
+    text-transform: uppercase;
+  }
+  header .sala {
+    margin-top: 16px;
+    font-style: italic;
+    color: var(--parchment-2);
+    font-size: 0.95rem;
+    letter-spacing: 0.08em;
+  }
+  header .sala .tag {
+    display: inline-block;
+    border: 1px solid var(--gold);
+    padding: 3px 12px;
+    margin-right: 10px;
+    letter-spacing: 0.16em;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-style: normal;
+  }
+
+  /* ---------- GALLERY ---------- */
+  .gallery {
+    max-width: 1100px;
+    margin: 30px auto 20px;
+    padding: 0 16px;
+    position: relative;
+  }
+
+  .stage {
+    position: relative;
+    background: var(--wall-deep);
+    border: 1px solid rgba(0,0,0,0.5);
+    border-radius: 2px;
+    padding: 36px 30px 20px;
+    box-shadow: inset 0 0 120px rgba(0,0,0,0.6);
+  }
+
+  /* Track lighting effect */
+  .stage::before {
+    content: "";
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 320px;
+    height: 60px;
+    background: radial-gradient(ellipse at center, rgba(232,200,120,0.35) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  /* PAINTING FRAME (ornate gilded frame) */
+  .frame {
+    position: relative;
+    margin: 0 auto;
+    max-width: 720px;
+    background: linear-gradient(135deg, var(--frame-1) 0%, var(--frame-highlight) 30%, var(--frame-1) 55%, var(--frame-2) 100%);
+    padding: 18px;
+    border-radius: 3px;
+    box-shadow:
+      0 20px 60px rgba(0,0,0,0.75),
+      0 2px 4px rgba(0,0,0,0.4),
+      inset 0 0 0 1px rgba(255,240,200,0.15);
+  }
+  .frame::before {
+    content: "";
+    position: absolute;
+    inset: 6px;
+    border: 2px solid var(--frame-2);
+    border-radius: 2px;
+    pointer-events: none;
+  }
+  .frame::after {
+    content: "";
+    position: absolute;
+    inset: 12px;
+    border: 1px solid rgba(232,200,120,0.55);
+    border-radius: 1px;
+    pointer-events: none;
+  }
+
+  .canvas-wrap {
+    position: relative;
+    background: #1a0f08;
+    box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
+    overflow: hidden;
+  }
+  .canvas-wrap img {
+    display: block;
+    width: 100%;
+    height: auto;
+    opacity: 1;
+    transition: opacity 0.35s ease;
+  }
+  .canvas-wrap.fading img { opacity: 0; }
+
+  /* Gallery light bloom on canvas */
+  .canvas-wrap::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(232,200,120,0.12) 0%, transparent 55%);
+    pointer-events: none;
+  }
+
+  /* NAV ARROWS */
+  .nav-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(14,8,6,0.5);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    font-size: 22px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, color 0.2s;
+    font-family: serif;
+    z-index: 5;
+  }
+  .nav-arrow:hover { background: var(--gold); color: var(--wall-deep); }
+  .nav-arrow.prev { left: 16px; }
+  .nav-arrow.next { right: 16px; }
+
+  /* ---------- MUSEUM PLACARD ---------- */
+  .placard {
+    max-width: 720px;
+    margin: 24px auto 0;
+    background: var(--parchment);
+    color: var(--ink);
+    padding: 22px 26px 20px;
+    border-radius: 2px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+    background-image:
+      radial-gradient(ellipse at 80% 20%, rgba(0,0,0,0.05) 0%, transparent 40%),
+      linear-gradient(180deg, var(--parchment) 0%, var(--parchment-2) 100%);
+    position: relative;
+  }
+  .placard::before {
+    content: "";
+    position: absolute;
+    inset: 8px;
+    border: 1px solid rgba(138,106,32,0.35);
+    pointer-events: none;
+  }
+
+  .placard .inv {
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: var(--gold-deep);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .placard h2 {
+    font-family: "Garamond", "Cormorant Garamond", "Times New Roman", serif;
+    font-size: clamp(1.3rem, 2.6vw, 1.75rem);
+    font-weight: 600;
+    margin: 0 0 4px;
+    color: var(--ink);
+    font-style: italic;
+  }
+  .placard .artist {
+    font-size: 0.95rem;
+    color: var(--ink);
+    margin-bottom: 2px;
+  }
+  .placard .meta {
+    font-size: 0.85rem;
+    color: var(--muted);
+    font-style: italic;
+    margin-bottom: 14px;
+  }
+  .placard .commentary {
+    font-size: 0.95rem;
+    color: var(--ink);
+    line-height: 1.55;
+    margin: 10px 0 0;
+  }
+  .placard .commentary::first-letter {
+    font-size: 2.4em;
+    float: left;
+    line-height: 0.9;
+    margin-right: 6px;
+    color: var(--gold-deep);
+    font-weight: 700;
+    font-family: "Cinzel", "Trajan Pro", serif;
+  }
+
+  /* ---------- THUMBNAIL STRIP ---------- */
+  .thumbstrip {
+    max-width: 900px;
+    margin: 30px auto 10px;
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    padding: 0 16px;
+    flex-wrap: wrap;
+  }
+  .thumb {
+    width: 120px;
+    height: 120px;
+    overflow: hidden;
+    cursor: pointer;
+    position: relative;
+    border: 3px solid transparent;
+    background: var(--frame-1);
+    padding: 4px;
+    transition: transform 0.2s;
+  }
+  .thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: saturate(0.9) brightness(0.85);
+    transition: filter 0.25s;
+  }
+  .thumb.active {
+    border-color: var(--gold);
+    box-shadow: 0 0 18px rgba(201,162,74,0.5);
+  }
+  .thumb.active img { filter: saturate(1.15) brightness(1); }
+  .thumb:hover { transform: translateY(-3px); }
+  .thumb:hover img { filter: saturate(1) brightness(0.95); }
+
+  /* ---------- CONTROLS ---------- */
+  .controls {
+    max-width: 720px;
+    margin: 14px auto 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--parchment-2);
+    font-size: 0.85rem;
+    padding: 0 16px;
+    font-style: italic;
+    letter-spacing: 0.04em;
+  }
+  .controls .counter { color: var(--gold); font-family: "Trajan Pro", serif; letter-spacing: 0.2em; }
+  .controls .auto-btn {
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    padding: 5px 14px;
+    border-radius: 2px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.78rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  .controls .auto-btn.on { background: var(--gold); color: var(--wall-deep); }
+
+  /* ---------- SHOP SECTION ---------- */
+  .shop-section {
+    max-width: 720px;
+    margin: 40px auto 0;
+    padding: 0 16px;
+    text-align: center;
+  }
+  .shop-divider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 28px;
+    color: var(--gold);
+    font-family: "Trajan Pro", "Cinzel", serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+  }
+  .shop-divider::before,
+  .shop-divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+  }
+  .shop-card {
+    background: linear-gradient(160deg, var(--parchment) 0%, var(--parchment-2) 100%);
+    color: var(--ink);
+    border-radius: 2px;
+    padding: 28px 32px 26px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.55);
+    position: relative;
+  }
+  .shop-card::before {
+    content: "";
+    position: absolute;
+    inset: 8px;
+    border: 1px solid rgba(138,106,32,0.3);
+    pointer-events: none;
+  }
+  .shop-card .shop-eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.35em;
+    color: var(--gold-deep);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .shop-card h3 {
+    font-family: "Garamond", "Cormorant Garamond", "Times New Roman", serif;
+    font-size: clamp(1.2rem, 2.4vw, 1.6rem);
+    font-style: italic;
+    font-weight: 600;
+    color: var(--ink);
+    margin: 0 0 10px;
+  }
+  .shop-card p {
+    font-size: 0.9rem;
+    color: #4a3825;
+    line-height: 1.55;
+    margin: 0 0 22px;
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .shop-btn {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--frame-1) 0%, var(--frame-highlight) 50%, var(--frame-1) 100%);
+    color: var(--wall-deep);
+    font-family: "Trajan Pro", "Cinzel", "Times New Roman", serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 12px 32px;
+    border-radius: 2px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.35);
+    transition: box-shadow 0.2s, filter 0.2s;
+    font-weight: 700;
+  }
+  .shop-btn:hover {
+    filter: brightness(1.1);
+    box-shadow: 0 6px 22px rgba(0,0,0,0.45);
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer {
+    text-align: center;
+    margin-top: 50px;
+    padding: 20px 16px 40px;
+    border-top: 1px solid rgba(201,162,74,0.18);
+    color: var(--parchment-2);
+    font-size: 0.82rem;
+    font-style: italic;
+  }
+  footer .mark { color: var(--gold); letter-spacing: 0.25em; text-transform: uppercase; }
+
+  /* ---------- LANGUAGE TOGGLE ---------- */
+  .lang-toggle {
+    position: absolute;
+    top: 22px;
+    right: 22px;
+    display: inline-flex;
+    border: 1px solid var(--gold);
+    border-radius: 2px;
+    overflow: hidden;
+    font-family: "Trajan Pro", "Cinzel", serif;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+  }
+  .lang-toggle button {
+    background: transparent;
+    color: var(--gold);
+    border: none;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: inherit;
+    letter-spacing: inherit;
+    transition: background 0.2s, color 0.2s;
+  }
+  .lang-toggle button.active {
+    background: var(--gold);
+    color: var(--wall-deep);
+  }
+  .lang-toggle button:not(.active):hover { background: rgba(201,162,74,0.15); }
+
+  header { position: relative; }
+
+  @media (max-width: 620px) {
+    .lang-toggle { top: 10px; right: 10px; font-size: 10px; }
+    .lang-toggle button { padding: 5px 9px; }
+  }
+
+  /* ---------- BUY BLOCK IN PLACARD (Stripe) ---------- */
+  .placard .buy {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 14px;
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(138,106,32,0.35);
+    flex-wrap: wrap;
+  }
+  .placard .buy .label-col { display: flex; flex-direction: column; gap: 2px; }
+  .placard .buy .label {
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold-deep);
+  }
+  .placard .buy .price {
+    font-family: "Trajan Pro", "Cinzel", serif;
+    font-size: 1.15rem;
+    color: var(--ink);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+  .placard .buy a.btn {
+    background: var(--wall);
+    color: var(--gold);
+    border: 1px solid var(--wall-deep);
+    padding: 10px 20px;
+    font-family: "Trajan Pro", "Cinzel", serif;
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 2px;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s, transform 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .placard .buy a.btn:hover { background: var(--gold); color: var(--wall-deep); }
+  .placard .buy a.btn:active { transform: scale(0.97); }
+  .placard .buy a.btn svg { width: 14px; height: 14px; }
+
+  @media (max-width: 620px) {
+    .stage { padding: 24px 12px 16px; }
+    .frame { padding: 10px; }
+    .nav-arrow { width: 36px; height: 36px; font-size: 18px; }
+    .thumb { width: 82px; height: 82px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="lang-toggle" role="group" aria-label="Language">
+    <button type="button" data-lang="es" class="active" onclick="setLang('es')">ES</button>
+    <button type="button" data-lang="en" onclick="setLang('en')">EN</button>
+  </div>
+
+  <!-- Prado-style crest -->
+  <svg class="crest" viewBox="0 0 64 64" aria-hidden="true">
+    <circle cx="32" cy="32" r="30" fill="none" stroke="#c9a24a" stroke-width="1.5"/>
+    <path d="M32 10 L38 26 L55 28 L42 40 L46 56 L32 48 L18 56 L22 40 L9 28 L26 26 Z"
+          fill="#c9a24a" stroke="#8a6a20" stroke-width="0.6"/>
+    <circle cx="32" cy="32" r="4" fill="#4a1f1f"/>
+  </svg>
+  <h1 class="museo">Museo</h1>
+  <div class="del-prado">del Prado</div>
+  <div class="sala">
+    <span class="tag" id="sala-tag">Sala Temporal</span>
+    <span id="sala-title">El Campeón y El Gato &middot; Una Serie en Cuatro Escuelas</span>
+  </div>
+</header>
+
+<div class="gallery">
+
+  <div class="stage">
+    <button class="nav-arrow prev" id="prevBtn" aria-label="Anterior" onclick="prev()">‹</button>
+    <button class="nav-arrow next" id="nextBtn" aria-label="Siguiente" onclick="next()">›</button>
+
+    <div class="frame">
+      <div class="canvas-wrap" id="canvas">
+        <img id="canvas-img" src="images/IMG_0262.jpeg" alt="El Campeón contra el Gato — El Greco style"/>
+      </div>
+    </div>
+  </div>
+
+  <!-- PLACARD -->
+  <div class="placard" id="placard">
+    <!-- populated by JS -->
+  </div>
+
+  <!-- CONTROLS -->
+  <div class="controls">
+    <span class="counter" id="counter">I / IV</span>
+    <button class="auto-btn" id="autoBtn" onclick="toggleAuto()">Auto</button>
+  </div>
+
+  <!-- THUMBNAIL STRIP -->
+  <div class="thumbstrip" id="thumbs">
+    <!-- populated by JS -->
+  </div>
+
+</div>
+
+<!-- SHOP SECTION -->
+<div class="shop-section" id="shopSection">
+  <div class="shop-divider" id="shopDivider">Adquirir Obra</div>
+  <div class="shop-card">
+    <div class="shop-eyebrow" id="shopEyebrow">Edición Limitada · Impresión de Archivo</div>
+    <h3 id="shopTitle">Llévate la Colección</h3>
+    <p id="shopDesc">Impresiones de alta fidelidad de la serie <em>Cat Boxing Club</em>, reproducidas sobre papel de archivo de 300&nbsp;g. Numeradas y firmadas por el artista.</p>
+    <a href="https://hiramster5.gumroad.com/" class="shop-btn" id="shopBtn" target="_blank" rel="noopener">Visitar la Tienda</a>
+  </div>
+</div>
+
+<footer>
+  <div class="mark" id="footMark">Reservado &middot; Adquisición Reciente</div>
+  <div style="margin-top:8px" id="footSub">Colección particular &middot; Serie: <em>Cat Boxing Club</em></div>
+</footer>
+
+<script>
+  const WORKS = [
+    {
+      src: 'images/IMG_0262.jpeg',
+      price: 89,
+      checkoutUrl: 'https://buy.stripe.com/test_5kQbJ03Nm47e2ug3d20co00',
+      es: {
+        inv: 'P-2601 · Sala 009B',
+        title: 'El Campeón contra el Gato',
+        artist: 'Atribuido al círculo del Greco',
+        meta: 'c. 1598 · Óleo sobre lienzo · 118 × 102 cm',
+        commentary: 'Vista de Toledo al fondo, figuras alargadas, luz divina que atraviesa nubes tormentosas — todos los rasgos canónicos del Greco. El púgil asume la postura de un mártir manierista; el gato, iluminado celestialmente, cumple el papel del santo ascendente. Los rostros desdibujados tras las cuerdas recuerdan al coro anónimo del Entierro del Conde de Orgaz.'
+      },
+      en: {
+        inv: 'P-2601 · Room 009B',
+        title: 'The Champion vs. The Cat',
+        artist: 'Attributed to the Circle of El Greco',
+        meta: 'c. 1598 · Oil on canvas · 118 × 102 cm',
+        commentary: 'View of Toledo in the background, elongated figures, divine light piercing stormy clouds — all the canonical hallmarks of El Greco. The boxer assumes the posture of a Mannerist martyr; the cat, celestially illuminated, plays the ascending saint. The blurred faces behind the ropes recall the anonymous chorus in The Burial of the Count of Orgaz.'
+      }
+    },
+    {
+      src: 'images/IMG_6550.jpeg',
+      price: 95,
+      checkoutUrl: 'https://buy.stripe.com/test_5kQdR8fw4fPW5GseVK0co01',
+      es: {
+        inv: 'P-3470 · Sala 067',
+        title: 'Round 1',
+        artist: 'Escuela de Goya — Pinturas Negras',
+        meta: 'c. 1820 · Óleo sobre yeso trasladado a lienzo · 88 × 112 cm',
+        commentary: 'Tenebrismo desaturado y atmósfera asfixiante propias de la última etapa goyesca en la Quinta del Sordo. El poste de madera con la inscripción "Round 1" funciona como sátira moral: el primer asalto es el único asalto. Las caras espectadoras tras las cuerdas son herederas directas del Aquelarre y del Duelo a Garrotazos.'
+      },
+      en: {
+        inv: 'P-3470 · Room 067',
+        title: 'Round 1',
+        artist: 'School of Goya — Black Paintings',
+        meta: 'c. 1820 · Oil on plaster, transferred to canvas · 88 × 112 cm',
+        commentary: 'Desaturated tenebrism and suffocating atmosphere characteristic of Goya\'s late period at the Quinta del Sordo. The wooden post inscribed "Round 1" functions as moral satire: the first round is the only round. The spectator faces behind the ropes are direct descendants of Witches\' Sabbath and Duel with Cudgels.'
+      }
+    },
+    {
+      src: 'images/IMG_6266.jpeg',
+      price: 120,
+      checkoutUrl: 'https://buy.stripe.com/test_fZu5kCcjSbzGd8UeVK0co02',
+      es: {
+        inv: 'P-2823 · Sala 056A',
+        title: 'El Jardín de las Delicias Felinas',
+        artist: 'Atribuido a El Bosco y taller',
+        meta: 'c. 1505 · Óleo sobre tabla de roble · 94 × 86 cm',
+        commentary: 'Un paralelismo menor del Jardín de las Delicias. El ring ocupa el orden central; los márgenes descienden al tormento boschiano habitual — peces con cabeza de felino, híbridos de pico y mandíbula, torres en llamas al horizonte. El cartel que se lee "ROID" — parodia del "PARADISUS" — anticipa el sarcasmo iconográfico del maestro.'
+      },
+      en: {
+        inv: 'P-2823 · Room 056A',
+        title: 'The Garden of Feline Delights',
+        artist: 'Attributed to Hieronymus Bosch and workshop',
+        meta: 'c. 1505 · Oil on oak panel · 94 × 86 cm',
+        commentary: 'A minor parallel to The Garden of Earthly Delights. The ring occupies the central order; the margins descend into typical Boschian torment — cat-headed fish, beak-and-jaw hybrids, burning towers on the horizon. The sign reading "ROID" — a parody of "PARADISUS" — anticipates the master\'s iconographic sarcasm.'
+      }
+    },
+    {
+      src: 'images/IMG_6674.jpeg',
+      price: 75,
+      checkoutUrl: 'https://buy.stripe.com/test_8x2dR883C47e1qc9Bq0co03',
+      es: {
+        inv: 'P-7012 · Sala Contemporánea',
+        title: 'Le Boxeur et le Chat',
+        artist: 'Escuela de Picasso / Juan Gris',
+        meta: 'c. 1912 · Óleo sobre lienzo · Cubismo analítico · 72 × 64 cm',
+        commentary: 'La escena descompuesta en planos geométricos superpuestos. Las orejas del gato se convierten en vectores triangulares; los guantes se reducen a esferas cromáticas rojas. Eco parisino de la disputa madrileña anterior — el mismo drama trasladado al vocabulario de Les Demoiselles, filtrado por la paleta austera de Juan Gris.'
+      },
+      en: {
+        inv: 'P-7012 · Contemporary Gallery',
+        title: 'Le Boxeur et le Chat',
+        artist: 'School of Picasso / Juan Gris',
+        meta: 'c. 1912 · Oil on canvas · Analytic Cubism · 72 × 64 cm',
+        commentary: 'The scene broken down into superimposed geometric planes. The cat\'s ears become triangular vectors; the gloves reduce to red chromatic spheres. A Parisian echo of the earlier Madrid dispute — the same drama translated into the vocabulary of Les Demoiselles, filtered through Juan Gris\'s austere palette.'
+      }
+    }
+  ];
+
+  const UI = {
+    es: {
+      salaTag: 'Sala Temporal',
+      salaTitle: 'El Campeón y El Gato &middot; Una Serie en Cuatro Escuelas',
+      prev: 'Anterior',
+      next: 'Siguiente',
+      auto: 'Auto',
+      pause: 'Pausar',
+      footMark: 'Reservado &middot; Adquisición Reciente',
+      footSub: 'Colección particular &middot; Serie: <em>Cat Boxing Club</em>',
+      shopDivider: 'Adquirir Obra',
+      shopEyebrow: 'Edición Limitada · Impresión de Archivo',
+      shopTitle: 'Llévate la Colección',
+      shopDesc: 'Impresiones de alta fidelidad de la serie <em>Cat Boxing Club</em>, reproducidas sobre papel de archivo de 300&nbsp;g. Numeradas y firmadas por el artista.',
+      shopBtn: 'Visitar la Tienda',
+      buyLabel: 'Lámina &middot; Edición de Archivo',
+      buyBtn: 'Comprar Ahora'
+    },
+    en: {
+      salaTag: 'Special Exhibit',
+      salaTitle: 'The Champion and the Cat &middot; A Series in Four Schools',
+      prev: 'Previous',
+      next: 'Next',
+      auto: 'Auto',
+      pause: 'Pause',
+      footMark: 'Reserved &middot; Recent Acquisition',
+      footSub: 'Private collection &middot; Series: <em>Cat Boxing Club</em>',
+      shopDivider: 'Acquire a Work',
+      shopEyebrow: 'Limited Edition · Archival Print',
+      shopTitle: 'Take the Collection Home',
+      shopDesc: 'High-fidelity prints from the <em>Cat Boxing Club</em> series, reproduced on 300&nbsp;g archival paper. Numbered and signed by the artist.',
+      shopBtn: 'Visit the Shop',
+      buyLabel: 'Archival Fine Art Print',
+      buyBtn: 'Buy Now'
+    }
+  };
+
+  let currentLang = 'es';
+
+  let current = 0;
+  let autoPlay = null;
+  const ROMAN = ['I','II','III','IV'];
+
+  const canvas = document.getElementById('canvas');
+  const placard = document.getElementById('placard');
+  const counter = document.getElementById('counter');
+  const thumbs = document.getElementById('thumbs');
+
+  // Build thumbnails (alt text will be refreshed on language change)
+  WORKS.forEach((w, i) => {
+    const t = document.createElement('div');
+    t.className = 'thumb' + (i === 0 ? ' active' : '');
+    t.innerHTML = `<img src="${w.src}" alt=""/>`;
+    t.addEventListener('click', () => go(i));
+    thumbs.appendChild(t);
+  });
+
+  const canvasImg = document.getElementById('canvas-img');
+
+  function render(i) {
+    current = (i + WORKS.length) % WORKS.length;
+    const w = WORKS[current];
+    const L = w[currentLang];
+
+    // fade out, preload new image, then swap src and fade in
+    canvas.classList.add('fading');
+    const pre = new Image();
+    pre.onload = () => {
+      canvasImg.src = w.src;
+      canvasImg.alt = L.title;
+      requestAnimationFrame(() => canvas.classList.remove('fading'));
+    };
+    pre.src = w.src;
+
+    // placard
+    const ui = UI[currentLang];
+    const priceStr = `€${w.price}`;
+    placard.innerHTML = `
+      <div class="inv">${L.inv}</div>
+      <h2>${L.title}</h2>
+      <div class="artist">${L.artist}</div>
+      <div class="meta">${L.meta}</div>
+      <div class="commentary">${L.commentary}</div>
+      <div class="buy">
+        <div class="label-col">
+          <span class="label">${ui.buyLabel}</span>
+          <span class="price">${priceStr}</span>
+        </div>
+        <a class="btn" href="${w.checkoutUrl}" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M3 4h2l2.4 11.4a2 2 0 0 0 2 1.6h8.3a2 2 0 0 0 2-1.5L22 7H6"/>
+            <circle cx="10" cy="21" r="1.3"/>
+            <circle cx="18" cy="21" r="1.3"/>
+          </svg>
+          ${ui.buyBtn}
+        </a>
+      </div>
+    `;
+    counter.textContent = `${ROMAN[current]} / IV`;
+
+    // thumbs
+    thumbs.querySelectorAll('.thumb').forEach((t, idx) => {
+      t.classList.toggle('active', idx === current);
+      const imgEl = t.querySelector('img');
+      if (imgEl) imgEl.alt = WORKS[idx][currentLang].title;
+    });
+  }
+
+  function applyLangChrome() {
+    const ui = UI[currentLang];
+    document.getElementById('sala-tag').textContent = ui.salaTag;
+    document.getElementById('sala-title').innerHTML = ui.salaTitle;
+    document.getElementById('prevBtn').setAttribute('aria-label', ui.prev);
+    document.getElementById('nextBtn').setAttribute('aria-label', ui.next);
+    document.getElementById('footMark').innerHTML = ui.footMark;
+    document.getElementById('footSub').innerHTML = ui.footSub;
+    document.getElementById('shopDivider').textContent = ui.shopDivider;
+    document.getElementById('shopEyebrow').textContent = ui.shopEyebrow;
+    document.getElementById('shopTitle').textContent = ui.shopTitle;
+    document.getElementById('shopDesc').innerHTML = ui.shopDesc;
+    document.getElementById('shopBtn').textContent = ui.shopBtn;
+    // auto button reflects current state
+    const ab = document.getElementById('autoBtn');
+    ab.textContent = autoPlay ? ui.pause : ui.auto;
+    // toggle pills
+    document.querySelectorAll('.lang-toggle button').forEach(b => {
+      b.classList.toggle('active', b.dataset.lang === currentLang);
+    });
+    document.documentElement.lang = currentLang;
+  }
+
+  function setLang(lang) {
+    if (!UI[lang] || lang === currentLang) return;
+    currentLang = lang;
+    applyLangChrome();
+    render(current); // re-render placard in new language
+  }
+
+  function go(i)    { render(i); }
+  function next()   { render(current + 1); }
+  function prev()   { render(current - 1); }
+
+  function toggleAuto() {
+    const btn = document.getElementById('autoBtn');
+    const ui = UI[currentLang];
+    if (autoPlay) {
+      clearInterval(autoPlay);
+      autoPlay = null;
+      btn.classList.remove('on');
+      btn.textContent = ui.auto;
+    } else {
+      autoPlay = setInterval(next, 5000);
+      btn.classList.add('on');
+      btn.textContent = ui.pause;
+    }
+  }
+
+  // keyboard nav
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') next();
+    else if (e.key === 'ArrowLeft') prev();
+  });
+
+  applyLangChrome();
+  render(0);
+</script>
+</body>
+</html>
