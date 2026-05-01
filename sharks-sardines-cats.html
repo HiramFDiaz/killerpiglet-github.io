@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sharks vs Sardines vs Cats — A Cross-Phylum Showdown</title>
+<style>
+  :root {
+    --bg: #0f1419;
+    --surface: #1a2332;
+    --surface-2: #243042;
+    --text: #e8eef5;
+    --text-muted: #8ba0b8;
+    --accent-shark: #6ba8ff;
+    --accent-sardine: #b8c5d6;
+    --accent-cat: #ff9a3c;
+    --border: #2d3f55;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    padding: 2rem 1rem;
+  }
+  .container { max-width: 1100px; margin: 0 auto; }
+
+  .nav { margin-bottom: 1.5rem; }
+  .nav a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; }
+  .nav a:hover { color: var(--text); }
+
+  header { text-align: center; margin-bottom: 3rem; }
+  h1 { font-size: 2.5rem; margin-bottom: 0.5rem; letter-spacing: -0.02em; }
+  .subtitle { color: var(--text-muted); font-size: 1.1rem; }
+
+  .intro {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+  .intro h2 { font-size: 1.2rem; margin-bottom: 0.5rem; color: var(--text-muted); }
+  .intro p { font-size: 1rem; }
+
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.75rem;
+    border-top: 4px solid;
+  }
+  .card.shark { border-top-color: var(--accent-shark); }
+  .card.sardine { border-top-color: var(--accent-sardine); }
+  .card.cat { border-top-color: var(--accent-cat); }
+
+  .card .photo {
+    width: calc(100% + 3.5rem);
+    margin: -1.75rem -1.75rem 1.25rem;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+    border-bottom: 1px solid var(--border);
+    filter: saturate(0.95);
+  }
+
+  .card h3 { font-size: 1.5rem; margin-bottom: 0.25rem; }
+  .card .tagline { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.25rem; font-style: italic; }
+  .card h4 { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); margin: 1.25rem 0 0.5rem; }
+  .card ul { list-style: none; padding: 0; }
+  .card li { padding: 0.35rem 0; font-size: 0.95rem; padding-left: 1.25rem; position: relative; }
+  .card li::before { content: "—"; position: absolute; left: 0; color: var(--text-muted); }
+
+  .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 1rem; padding: 1rem; background: var(--surface-2); border-radius: 8px; }
+  .stat-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+  .stat-value { font-size: 1.1rem; font-weight: 600; margin-top: 0.2rem; }
+
+  .comparison { margin-bottom: 3rem; }
+  .comparison h2 { font-size: 1.75rem; margin-bottom: 1rem; }
+  table { width: 100%; border-collapse: collapse; background: var(--surface); border-radius: 12px; overflow: hidden; }
+  th, td { padding: 1rem; text-align: left; border-bottom: 1px solid var(--border); }
+  th { background: var(--surface-2); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); }
+  tr:last-child td { border-bottom: none; }
+  td:first-child { font-weight: 600; color: var(--text-muted); }
+
+  .verdict {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+  }
+  .verdict h2 { margin-bottom: 1rem; }
+  .verdict-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin-top: 1rem; }
+  .verdict-item { padding: 1rem; background: var(--surface-2); border-radius: 8px; border-left: 3px solid; }
+  .verdict-item.shark { border-left-color: var(--accent-shark); }
+  .verdict-item.sardine { border-left-color: var(--accent-sardine); }
+  .verdict-item.cat { border-left-color: var(--accent-cat); }
+  .verdict-item strong { display: block; margin-bottom: 0.35rem; }
+
+  footer { text-align: center; color: var(--text-muted); font-size: 0.85rem; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border); }
+
+  @media (max-width: 600px) {
+    h1 { font-size: 1.8rem; }
+    body { padding: 1rem 0.75rem; }
+    .card { padding: 1.25rem; }
+    th, td { padding: 0.65rem; font-size: 0.85rem; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <nav class="nav"><a href="index.html">← Back to home</a></nav>
+
+  <header>
+    <h1>Sharks vs Sardines vs Cats</h1>
+    <p class="subtitle">Three animals, three completely different jobs in the food web</p>
+  </header>
+
+  <section class="intro">
+    <h2>Why this matchup?</h2>
+    <p>Putting a 3-meter apex predator next to a 15-centimeter schooling fish next to a 4-kilo housecat sounds absurd — but each one occupies a famous slot in its ecosystem, and the contrast says a lot about how evolution sorts animals into roles. One hunts the ocean, one feeds it, one was hunted enough that we put it on the couch.</p>
+  </section>
+
+  <section class="cards">
+
+    <div class="card shark">
+      <img class="photo" src="images/shark.jpg" alt="Shark swimming">
+      <h3>Shark</h3>
+      <p class="tagline">The original apex predator</p>
+
+      <h4>What it does</h4>
+      <p>Older than trees. ~500 living species ranging from the dwarf lanternshark (under 20 cm) to the whale shark (over 12 m). Most are mid-to-upper-trophic predators with extraordinary sensory hardware — electroreception, lateral lines, and a sense of smell tuned to parts per billion.</p>
+
+      <h4>Strengths</h4>
+      <ul>
+        <li>Cartilage skeleton — light, fast, regenerative teeth</li>
+        <li>Top-down ecosystem control: removes weak/sick prey</li>
+        <li>~450 million years of selection pressure</li>
+        <li>Some species cross entire oceans</li>
+      </ul>
+
+      <h4>Weaknesses</h4>
+      <ul>
+        <li>Slow to mature, low reproductive rate — easy to overfish</li>
+        <li>Sensitive to bycatch and finning</li>
+        <li>~1/3 of species threatened with extinction</li>
+      </ul>
+
+      <div class="stats">
+        <div><div class="stat-label">Typical size</div><div class="stat-value">0.2–12 m</div></div>
+        <div><div class="stat-label">Trophic level</div><div class="stat-value">3.1–4.5</div></div>
+      </div>
+    </div>
+
+    <div class="card sardine">
+      <img class="photo" src="images/sardine.jpg" alt="European pilchard sardine">
+      <h3>Sardine</h3>
+      <p class="tagline">The currency of the ocean</p>
+
+      <h4>What it does</h4>
+      <p>A small, oily, schooling forage fish (genus <em>Sardina</em> and friends). Filters plankton at the bottom of the food web and turns it into dense, calorie-rich biomass that almost everything else — tuna, dolphins, gannets, whales, humans — eats.</p>
+
+      <h4>Strengths</h4>
+      <ul>
+        <li>Schools of millions move as a single organism</li>
+        <li>Extraordinary biomass conversion efficiency</li>
+        <li>Reproduces in huge numbers, fast</li>
+        <li>One of the most sustainable proteins per kilogram</li>
+      </ul>
+
+      <h4>Weaknesses</h4>
+      <ul>
+        <li>Eaten by basically everything bigger</li>
+        <li>Boom/bust population cycles tied to ocean temperature</li>
+        <li>Stocks collapse when fished too hard (see: California, 1940s)</li>
+      </ul>
+
+      <div class="stats">
+        <div><div class="stat-label">Typical size</div><div class="stat-value">10–25 cm</div></div>
+        <div><div class="stat-label">Trophic level</div><div class="stat-value">2.7–3.0</div></div>
+      </div>
+    </div>
+
+    <div class="card cat">
+      <img class="photo" src="images/cat.jpg" alt="Domestic cat">
+      <h3>Cat</h3>
+      <p class="tagline">The successful negotiator</p>
+
+      <h4>What it does</h4>
+      <p>A small obligate-carnivore mesopredator (<em>Felis catus</em>) that domesticated itself ~10,000 years ago by hunting rodents around grain stores. Hardwired to ambush, sleep 14+ hours a day, and judge you. Population today: roughly 600 million, on every continent except Antarctica.</p>
+
+      <h4>Strengths</h4>
+      <ul>
+        <li>Independent, self-grooming, low-maintenance</li>
+        <li>One of the most efficient small predators on land</li>
+        <li>Co-evolved with humans without losing its instincts</li>
+        <li>Fits in a sunbeam</li>
+      </ul>
+
+      <h4>Weaknesses</h4>
+      <ul>
+        <li>Ecological menace when feral — major driver of bird/reptile extinctions</li>
+        <li>Prone to obesity, kidney issues, and existential indifference</li>
+        <li>Will not come when called</li>
+      </ul>
+
+      <div class="stats">
+        <div><div class="stat-label">Typical size</div><div class="stat-value">3–6 kg</div></div>
+        <div><div class="stat-label">Trophic level</div><div class="stat-value">~3.5 (as predator)</div></div>
+      </div>
+    </div>
+
+  </section>
+
+  <section class="comparison">
+    <h2>Side-by-side</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Attribute</th>
+          <th>Shark</th>
+          <th>Sardine</th>
+          <th>Cat</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Habitat</td><td>Open ocean &amp; coast</td><td>Open ocean (pelagic)</td><td>Your couch</td></tr>
+        <tr><td>Diet</td><td>Fish, seals, squid, the occasional unlucky surfer</td><td>Plankton, copepods</td><td>Meat, treats, your dinner if unguarded</td></tr>
+        <tr><td>Lifespan</td><td>20–70 yrs (Greenland shark: 250+)</td><td>5–15 yrs</td><td>12–18 yrs</td></tr>
+        <tr><td>Reproduction</td><td>Slow; few large young</td><td>Spawns millions of eggs</td><td>Several litters/yr if unspayed</td></tr>
+        <tr><td>Speed</td><td>Up to 70 km/h (mako)</td><td>~10 km/h, but in formation</td><td>~48 km/h short bursts</td></tr>
+        <tr><td>Domesticated?</td><td>Absolutely not</td><td>No, but heavily fished</td><td>Arguably — they domesticated us</td></tr>
+        <tr><td>Conservation status</td><td>Many species threatened</td><td>Stock-dependent; volatile</td><td>Least concern (overabundant)</td></tr>
+        <tr><td>Vibe</td><td>Cold, ancient, indifferent</td><td>Selfless, anonymous</td><td>Smug</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="verdict">
+    <h2>Which one for which job?</h2>
+    <p>None of these is "best" — they're optimized for completely different problems. The real lesson is how three wildly different solutions all work.</p>
+
+    <div class="verdict-grid">
+      <div class="verdict-item shark">
+        <strong>Pick a shark if</strong>
+        you need to keep an ocean ecosystem honest, you respect deep evolutionary engineering, and you don't want a pet.
+      </div>
+      <div class="verdict-item sardine">
+        <strong>Pick a sardine if</strong>
+        you want the most efficient way to move energy from sunlight to bigger animals — or you want a sustainable, omega-3-rich dinner that doesn't cost the planet.
+      </div>
+      <div class="verdict-item cat">
+        <strong>Pick a cat if</strong>
+        you want a small, warm, mostly-self-managing predator that will tolerate your presence in exchange for food and a windowsill.
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>A cross-phylum comparison. Numbers are typical ranges across species — individuals vary wildly.</p>
+  </footer>
+
+</div>
+</body>
+</html>
