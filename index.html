@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Killerpiglet</title>
+<title>Piglandia</title>
 <style>
   :root {
     --bg: #0f1419;
@@ -88,6 +88,33 @@
 
   footer { text-align: center; color: var(--text-muted); font-size: 0.85rem; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border); }
 
+  .elsewhere { margin-bottom: 3.5rem; }
+  .elsewhere h2 {
+    font-size: 1.25rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-bottom: 1.25rem;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+  .elsewhere ul { list-style: none; }
+  .elsewhere li {
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .elsewhere li:last-child { border-bottom: none; }
+  .elsewhere a {
+    color: var(--text);
+    text-decoration: none;
+    display: block;
+    transition: color 0.15s ease;
+  }
+  .elsewhere a:hover { color: var(--accent-4); }
+  .elsewhere .title { font-weight: 500; }
+  .elsewhere .ext { color: var(--text-muted); font-size: 0.85em; margin-left: 0.35rem; }
+  .elsewhere .source { color: var(--text-muted); font-size: 0.85rem; margin-top: 0.2rem; }
+  .elsewhere .note { color: var(--text-muted); font-size: 0.95rem; margin-top: 0.35rem; }
+
   @media (max-width: 600px) {
     h1 { font-size: 2rem; }
     body { padding: 2rem 0.75rem; }
@@ -99,20 +126,31 @@
 <div class="container">
 
   <header>
-    <h1>Killerpiglet</h1>
+    <h1>Piglandia</h1>
     <p class="subtitle">A small collection of write-ups and comparisons. Pick something below.</p>
   </header>
 
-  <section class="grid">
+  <section class="elsewhere">
+    <h2>Found elsewhere</h2>
+    <ul>
+      <li>
+        <a href="https://www.sfcv.org/articles/feature/wc-handy-havana-afro-cuban-inspirations-and-blues" target="_blank" rel="noopener">
+          <span class="title">W.C. Handy in Havana — Afro-Cuban inspirations and the blues<span class="ext">↗</span></span>
+          <div class="source">San Francisco Classical Voice</div>
+          <div class="note">How Cuban habanera rhythms shaped the early American blues — Handy's 1900 Havana stay as the missing link.</div>
+        </a>
+      </li>
+      <li>
+        <a href="https://soundquest.net/rhythm/r-1/clave-and-tresillo/" target="_blank" rel="noopener">
+          <span class="title">Clave and Tresillo<span class="ext">↗</span></span>
+          <div class="source">SoundQuest · Essentials of Rhythm</div>
+          <div class="note">The 3+3+2 syncopation underneath nearly all Latin and African-American grooves — clave, tresillo, and the bossa variant explained.</div>
+        </a>
+      </li>
+    </ul>
+  </section>
 
-    <a href="amp-classes.html" class="card c1">
-      <div class="icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><circle cx="12" cy="9" r="2"/><circle cx="12" cy="15" r="3.5"/></svg>
-      </div>
-      <h3>Solid State Amplifier Classes</h3>
-      <p>Class A vs. Class AB vs. Class D — how they work and where each one fits.</p>
-      <span class="arrow">Read →</span>
-    </a>
+  <section class="grid">
 
     <a href="tube-amp-topologies.html" class="card c2">
       <div class="icon" aria-hidden="true">
